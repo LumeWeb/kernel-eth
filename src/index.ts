@@ -24,6 +24,8 @@ addHandler("presentSeed", handlePresentSeed);
 addHandler("ready", handleReady);
 
 [
+  "eth_accounts",
+  "eth_requestAccounts",
   "eth_getBalance",
   "eth_chainId",
   "eth_blockNumber",
@@ -56,6 +58,10 @@ async function handlePresentSeed() {
 async function handleRpcMethod(aq: ActiveQuery) {
   await moduleReady;
   switch (aq.callerInput?.method) {
+    case "eth_accounts":
+    case "eth_requestAccounts": {
+      return [];
+    }
     case "eth_getBalance": {
       return client.get_balance(
         aq.callerInput?.params[0],
