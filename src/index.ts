@@ -182,9 +182,7 @@ async function setup() {
     const method = data.get("method");
     let params = data.get("params");
 
-    if (params === "null") {
-      params = null;
-    }
+    params = JSON.parse(params);
 
     let query;
     let ret: RPCResponse;
