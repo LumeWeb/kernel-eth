@@ -43,10 +43,12 @@ addHandler("ready", handleReady);
   "eth_getLogs",
   "net_version",
 ].forEach((rpcMethod) => {
-  addHandler(rpcMethod, (aq: ActiveQuery) => {
-    aq.callerInput = aq.callerInput || {};
-    aq.callerInput.method = rpcMethod;
-    handleRpcMethod(aq);
+  addHandler(rpcMethod, async (aq: ActiveQuery) => {
+    aq.callerInput = {
+      params: aq.callerInput || {},
+      method: rpcMethod,
+    };
+    aq.respond(await handleRpcMethod(aq));
   });
 });
 
