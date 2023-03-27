@@ -212,10 +212,10 @@ async function setup() {
   await client.sync();
 }
 
-async function handleReady(aq:ActiveQuery){
-    await moduleReady;
+async function handleReady(aq: ActiveQuery) {
+  await moduleReady;
 
-    aq.respond();
+  aq.respond();
 }
 
 function mapToObj(map: Map<any, any> | undefined): Object | undefined {
