@@ -1,0 +1,30 @@
+{
+  "name": "@lumeweb/kernel-eth",
+  "version": "0.1.0",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build-script": "tsc --project tsconfig.build.json && mv dist-build/build.js dist-build/build.mjs",
+    "compile": "npm run build-script && rimraf node_modules/@lumeweb/dht-rpc-client/node_modules node_modules/@lumeweb/kernel-dht-client/node_modules/libkmodule && node build.js",
+    "build": "npm run compile && node ./dist-build/build.mjs dev"
+  },
+  "dependencies": {
+    "@lumeweb/kernel-rpc-client": "git+https://git.lumeweb.com/LumeWeb/kernel-rpc-client.git",
+    "libkmodule": "^0.2.53",
+    "yaml": "^2.2.1"
+  },
+  "devDependencies": {
+    "@lumeweb/interface-relay": "git+https://git.lumeweb.com/LumeWeb/interface-relay.git",
+    "@scure/bip39": "^1.2.0",
+    "@skynetlabs/skynet-nodejs": "^2.9.0",
+    "@types/node": "^18.15.9",
+    "@types/read": "^0.0.29",
+    "buffer": "^6.0.3",
+    "cli-progress": "^3.12.0",
+    "esbuild": "^0.17.13",
+    "esbuild-plugin-wasm": "^1.0.0",
+    "prettier": "^2.8.7",
+    "read": "^2.0.0",
+    "typescript": "^5.0.2"
+  }
+}
