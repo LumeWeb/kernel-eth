@@ -21,6 +21,7 @@ let client: Client;
 let rpc: RpcNetwork;
 
 addHandler("presentSeed", handlePresentSeed);
+addHandler("ready", handleReady);
 
 [
   "eth_getBalance",
@@ -203,6 +204,12 @@ async function setup() {
 
   client = new Client(CHECKPOINT);
   await client.sync();
+}
+
+async function handleReady(aq:ActiveQuery){
+    await moduleReady;
+
+    aq.respond();
 }
 
 function mapToObj(map: Map<any, any> | undefined): Object | undefined {
