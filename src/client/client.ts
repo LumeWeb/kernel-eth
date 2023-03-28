@@ -136,10 +136,8 @@ export default class Client {
   public async subscribe(callback: (ei: ExecutionInfo) => AsyncOrSync<void>) {
     setInterval(async () => {
       try {
-        console.time("subscribe sync");
         await this._sync();
         const ei = await this.getLatestExecution();
-        console.timeEnd("subscribe sync");
         if (ei && ei.blockhash !== this.latestBlockHash) {
           this.latestBlockHash = ei.blockhash;
           return await callback(ei);
