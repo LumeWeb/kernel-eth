@@ -5,7 +5,7 @@ import path from "path";
 await esbuild.build({
   entryPoints: ["src/index.ts"],
   outfile: "dist/index.js",
-  format: "esm",
+  format: "iife",
   bundle: true,
   legalComments: "external",
   define: {
@@ -43,6 +43,8 @@ await esbuild.build({
       },
     },
   ],
+  external: ["fs"],
+  inject: ["./polyfill.js"],
 });
 
 export {};
