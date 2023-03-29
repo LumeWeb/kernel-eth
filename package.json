@@ -9,6 +9,7 @@
     "build": "npm run compile && node ./dist-build/build.mjs dev"
   },
   "dependencies": {
+    "@chainsafe/as-sha256": "^0.3.1",
     "@chainsafe/bls": "^7.1.1",
     "@chainsafe/blst": "^0.2.8",
     "@chainsafe/ssz": "^0.10.2",
@@ -32,7 +33,6 @@
     "path-browserify": "^1.0.1",
     "rlp": "^3.0.0",
     "stream-browserify": "^3.0.0",
-    "ts-essentials": "^9.3.1",
     "web3-core": "^1.9.0",
     "web3-core-method": "^1.9.0",
     "web3-eth": "^1.9.0",

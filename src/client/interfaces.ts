@@ -1,11 +1,15 @@
-import { AsyncOrSync } from "ts-essentials";
 import { LightClientUpdate } from "./types.js";
 
 export interface IProver {
   get callback(): Function;
-  getSyncUpdate(
+
+  getCommittee(period: number | "latest"): Promise<Uint8Array[]>;
+
+  getCommitteeHash(
     period: number,
     currentPeriod: number,
-    cacheCount: number
-  ): AsyncOrSync<LightClientUpdate>;
+    count: number
+  ): Promise<Uint8Array>;
+
+  getSyncUpdate(period: number): Promise<LightClientUpdate>;
 }

@@ -6,7 +6,11 @@ import {
   OptimisticUpdate,
   VerifyWithReason,
 } from "./types.js";
-import { getDefaultClientConfig } from "./utils.js";
+import {
+  concatUint8Array,
+  getDefaultClientConfig,
+  isUint8ArrayEq,
+} from "./utils.js";
 import { IProver } from "./interfaces.js";
 import {
   BEACON_SYNC_SUPER_MAJORITY,
@@ -25,12 +29,12 @@ import { SyncCommitteeFast } from "@lodestar/light-client";
 import bls from "@chainsafe/bls/switchable";
 import { PublicKey } from "@chainsafe/bls/types.js";
 import { fromHexString, toHexString } from "@chainsafe/ssz";
-import { AsyncOrSync } from "ts-essentials";
 import * as altair from "@lodestar/types/altair";
 import * as phase0 from "@lodestar/types/phase0";
 import * as bellatrix from "@lodestar/types/bellatrix";
 import { init } from "@chainsafe/bls/switchable";
 import { VerifyingProvider } from "./rpc/provider.js";
+import { digest } from "@chainsafe/as-sha256";
 
 export default class Client {
   latestCommittee?: Uint8Array[];
@@ -85,55 +89,13 @@ export default class Client {
     return this._provider;
   }
 
-  async syncProver(
-    startPeriod: number,
-    currentPeriod: number,
-    startCommittee: Uint8Array[]
-  ): Promise<{ syncCommittee: Uint8Array[]; period: number }> {
-    for (let period = startPeriod; period < currentPeriod; period += 1) {
-      try {
-        const update = await this.prover.getSyncUpdate(
-          period,
-          currentPeriod,
-          DEFAULT_BATCH_SIZE
-        );
-        const validOrCommittee = await this.syncUpdateVerifyGetCommittee(
-          startCommittee,
-          period,
-          update
-        );
-
-        if (!(validOrCommittee as boolean)) {
-          console.log(`Found invalid update at period(${period})`);
-          return {
-            syncCommittee: startCommittee,
-            period,
-          };
-        }
-        startCommittee = validOrCommittee as Uint8Array[];
-      } catch (e) {
-        console.error(`failed to fetch sync update for period(${period})`);
-        return {
-          syncCommittee: startCommittee,
-          period,
-        };
-      }
-    }
-    return {
-      syncCommittee: startCommittee,
-      period: currentPeriod,
-    };
-  }
-
-  // returns the prover info containing the current sync
-
   public getCurrentPeriod(): number {
     return computeSyncPeriodAtSlot(
       getCurrentSlot(this.config.chainConfig, this.genesisTime)
     );
   }
 
-  public async subscribe(callback: (ei: ExecutionInfo) => AsyncOrSync<void>) {
+  public async subscribe(callback: (ei: ExecutionInfo) => void) {
     setInterval(async () => {
       try {
         await this._sync();
@@ -146,10 +108,6 @@ export default class Client {
         console.error(e);
       }
     }, POLLING_DELAY);
-  }
-
-  optimisticUpdateFromJSON(update: any): OptimisticUpdate {
-    return altair.ssz.LightClientOptimisticUpdate.fromJson(update);
   }
 
   async optimisticUpdateVerify(
@@ -195,7 +153,7 @@ export default class Client {
     return this.getNextValidExecutionInfo(retry - 1);
   }
 
-  protected async _sync() {
+  private async _sync() {
     const currentPeriod = this.getCurrentPeriod();
     if (currentPeriod > this.latestPeriod) {
       this.latestCommittee = await this.syncFromGenesis();
@@ -204,59 +162,47 @@ export default class Client {
   }
 
   // committee and prover index of the first honest prover
-  protected async syncFromGenesis(): Promise<Uint8Array[]> {
-    // get the tree size by currentPeriod - genesisPeriod
+  private async syncFromGenesis(): Promise<Uint8Array[]> {
     const currentPeriod = this.getCurrentPeriod();
     let startPeriod = this.genesisPeriod;
-    let startCommittee = this.genesisCommittee;
-    console.log(
-      `Sync started from period(${startPeriod}) to period(${currentPeriod})`
+
+    let lastCommitteeHash: Uint8Array = this.getCommitteeHash(
+      this.genesisCommittee
     );
 
-    const { syncCommittee, period } = await this.syncProver(
-      startPeriod,
-      currentPeriod,
-      startCommittee
-    );
-    if (period === currentPeriod) {
-      return syncCommittee;
+    for (let period = startPeriod + 1; period <= currentPeriod; period++) {
+      try {
+        lastCommitteeHash = await this.prover.getCommitteeHash(
+          period,
+          currentPeriod,
+          DEFAULT_BATCH_SIZE
+        );
+      } catch (e: any) {
+        throw new Error(
+          `failed to fetch committee hash for prover at period(${period}): ${e.meessage}`
+        );
+      }
     }
-    throw new Error("no honest prover found");
+    return this.getCommittee(currentPeriod, lastCommitteeHash);
   }
 
-  protected async syncUpdateVerifyGetCommittee(
-    prevCommittee: Uint8Array[],
+  async getCommittee(
     period: number,
-    update: LightClientUpdate
-  ): Promise<false | Uint8Array[]> {
-    const updatePeriod = computeSyncPeriodAtSlot(
-      update.attestedHeader.beacon.slot
-    );
-    if (period !== updatePeriod) {
-      console.error(
-        `Expected update with period ${period}, but recieved ${updatePeriod}`
-      );
-      return false;
-    }
-
-    const prevCommitteeFast = this.deserializeSyncCommittee(prevCommittee);
-    try {
-      // check if the update has valid signatures
-      await assertValidLightClientUpdate(
-        this.config.chainConfig,
-        prevCommitteeFast,
-        update
-      );
-      return update.nextSyncCommittee.pubkeys;
-    } catch (e) {
-      console.error(e);
-      return false;
-    }
+    expectedCommitteeHash: Uint8Array | null
+  ): Promise<Uint8Array[]> {
+    if (period === this.genesisPeriod) return this.genesisCommittee;
+    if (!expectedCommitteeHash)
+      throw new Error("expectedCommitteeHash required");
+    const committee = await this.prover.getCommittee(period);
+    const committeeHash = this.getCommitteeHash(committee);
+    if (!isUint8ArrayEq(committeeHash, expectedCommitteeHash as Uint8Array))
+      throw new Error("prover responded with an incorrect committee");
+    return committee;
   }
 
-  protected async getLatestExecution(): Promise<ExecutionInfo | null> {
+  private async getLatestExecution(): Promise<ExecutionInfo | null> {
     const updateJSON = await this.prover.callback(
-      "/eth/v1/beacon/light_client/optimistic_update"
+      "consensus_optimistic_update"
     );
     const update = this.optimisticUpdateFromJSON(updateJSON);
     const verify = await this.optimisticUpdateVerify(
@@ -276,11 +222,13 @@ export default class Client {
     );
   }
 
-  protected async getExecutionFromBlockRoot(
+  private async getExecutionFromBlockRoot(
     slot: bigint,
     expectedBlockRoot: Bytes32
   ): Promise<ExecutionInfo> {
-    const res = await this.prover.callback(`/eth/v2/beacon/blocks/${slot}`);
+    const res = await this.prover.callback("consensus_block", {
+      block: slot,
+    });
     const blockJSON = res.message.body;
     const block = bellatrix.ssz.BeaconBlockBody.fromJson(blockJSON);
     const blockRoot = toHexString(
@@ -310,5 +258,11 @@ export default class Client {
 
   private deserializePubkeys(pubkeys: Uint8Array[]): PublicKey[] {
     return pubkeys.map((pk) => bls.PublicKey.fromBytes(pk));
+  }
+  private getCommitteeHash(committee: Uint8Array[]): Uint8Array {
+    return digest(concatUint8Array(committee));
+  }
+  private optimisticUpdateFromJSON(update: any): OptimisticUpdate {
+    return altair.ssz.LightClientOptimisticUpdate.fromJson(update);
   }
 }

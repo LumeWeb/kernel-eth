@@ -1,9 +1,10 @@
 import * as altair from "@lodestar/types/altair";
 import { IProver } from "./interfaces.js";
 import { LightClientUpdate } from "./types.js";
+import { CommitteeSSZ, HashesSSZ, LightClientUpdateSSZ } from "./ssz.js";
 
 export default class Prover implements IProver {
-  cachedSyncUpdate: Map<number, LightClientUpdate> = new Map();
+  cachedHashes: Map<number, Uint8Array> = new Map();
 
   constructor(callback: Function) {
     this._callback = callback;
@@ -15,28 +16,38 @@ export default class Prover implements IProver {
     return this._callback;
   }
 
-  async _getSyncUpdates(
-    startPeriod: number,
-    maxCount: number
-  ): Promise<LightClientUpdate[]> {
-    const res = await this._callback(
-      `/eth/v1/beacon/light_client/updates?start_period=${startPeriod}&count=${maxCount}`
-    );
-    return res.map((u: any) => altair.ssz.LightClientUpdate.fromJson(u.data));
+  async getCommittee(period: number | "latest"): Promise<Uint8Array[]> {
+    const res = await this.callback("consensus_committee_period", { period });
+    return CommitteeSSZ.deserialize(Uint8Array.from(Object.values(res)));
   }
 
-  async getSyncUpdate(
+  async getSyncUpdate(period: number): Promise<LightClientUpdate> {
+    const res = await this.callback("consensus_committee_period", { period });
+    return LightClientUpdateSSZ.deserialize(
+      Uint8Array.from(Object.values(res))
+    );
+  }
+
+  async _getHashes(startPeriod: number, count: number): Promise<Uint8Array[]> {
+    const res = await this.callback("consensus_committee_hashes", {
+      start: startPeriod,
+      count,
+    });
+    return HashesSSZ.deserialize(Uint8Array.from(Object.values(res)));
+  }
+
+  async getCommitteeHash(
     period: number,
     currentPeriod: number,
     cacheCount: number
-  ): Promise<LightClientUpdate> {
-    const _cacheCount = Math.min(currentPeriod - period + 1, cacheCount);
-    if (!this.cachedSyncUpdate.has(period)) {
-      const vals = await this._getSyncUpdates(period, _cacheCount);
-      for (let i = 0; i < _cacheCount; i++) {
-        this.cachedSyncUpdate.set(period + i, vals[i]);
+  ): Promise<Uint8Array> {
+    const _count = Math.min(currentPeriod - period + 1, cacheCount);
+    if (!this.cachedHashes.has(period)) {
+      const vals = await this._getHashes(period, _count);
+      for (let i = 0; i < _count; i++) {
+        this.cachedHashes.set(period + i, vals[i]);
       }
     }
-    return this.cachedSyncUpdate.get(period)!;
+    return this.cachedHashes.get(period)!;
   }
 }
