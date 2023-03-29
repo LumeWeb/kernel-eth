@@ -65,6 +65,11 @@ async function handleRpcMethod(aq: ActiveQuery) {
 }
 
 async function consensusHandler(method: string, data: any) {
+  // @ts-ignore
+  await (
+    await rpc.ready
+  )();
+
   while (true) {
     let query = await rpc.simpleQuery({
       query: {
@@ -87,6 +92,10 @@ async function consensusHandler(method: string, data: any) {
 }
 
 async function executionHandler(data: Map<string, string | any>) {
+  // @ts-ignore
+  await (
+    await rpc.ready
+  )();
   while (true) {
     let query = await rpc.simpleQuery({
       query: {
