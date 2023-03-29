@@ -596,7 +596,13 @@ export class VerifyingProvider {
     const isAccountValid = account
       .serialize()
       .equals(expectedAccountRLP ? expectedAccountRLP : emptyAccountSerialize);
-    if (!isAccountValid) return false;
+    if (!isAccountValid) {
+      return false;
+    }
+    if (storageKeys.length !== proof?.storageProof.length) {
+      console.error("missing storageProof");
+      throw new Error("missing storageProof");
+    }
 
     for (let i = 0; i < storageKeys.length; i++) {
       const sp = proof.storageProof[i];
@@ -612,7 +618,9 @@ export class VerifyingProvider {
         (!expectedStorageRLP && sp.value === "0x0") ||
         (!!expectedStorageRLP &&
           expectedStorageRLP.equals(Buffer.from(rlp.encode(sp.value))));
-      if (!isStorageValid) return false;
+      if (!isStorageValid) {
+        return false;
+      }
     }
 
     return true;
