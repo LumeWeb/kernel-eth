@@ -49,6 +49,8 @@ export default class Client {
   private prover: IProver;
   private rpcCallback: Function;
 
+  private boot = false;
+
   constructor(prover: IProver, rpcCallback: Function) {
     this.prover = prover;
     this.rpcCallback = rpcCallback;
@@ -84,6 +86,7 @@ export default class Client {
       });
 
       this._provider = provider;
+      this.boot = true;
     }
 
     return this._provider;
@@ -156,7 +159,11 @@ export default class Client {
   private async _sync() {
     const currentPeriod = this.getCurrentPeriod();
     if (currentPeriod > this.latestPeriod) {
-      this.latestCommittee = await this.syncFromGenesis();
+      if (!this.boot) {
+        this.latestCommittee = await this.syncFromGenesis();
+      } else {
+        this.latestCommittee = await this.syncFromLastUpdate();
+      }
       this.latestPeriod = currentPeriod;
     }
   }
@@ -168,6 +175,30 @@ export default class Client {
 
     let lastCommitteeHash: Uint8Array = this.getCommitteeHash(
       this.genesisCommittee
+    );
+
+    for (let period = startPeriod + 1; period <= currentPeriod; period++) {
+      try {
+        lastCommitteeHash = await this.prover.getCommitteeHash(
+          period,
+          currentPeriod,
+          DEFAULT_BATCH_SIZE
+        );
+      } catch (e: any) {
+        throw new Error(
+          `failed to fetch committee hash for prover at period(${period}): ${e.meessage}`
+        );
+      }
+    }
+    return this.getCommittee(currentPeriod, lastCommitteeHash);
+  }
+
+  private async syncFromLastUpdate() {
+    const currentPeriod = this.getCurrentPeriod();
+    let startPeriod = this.latestPeriod;
+
+    let lastCommitteeHash: Uint8Array = this.getCommitteeHash(
+      this.latestCommittee as Uint8Array[]
     );
 
     for (let period = startPeriod + 1; period <= currentPeriod; period++) {
