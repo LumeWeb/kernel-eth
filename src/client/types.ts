@@ -1,13 +1,12 @@
-import { routes } from "@lodestar/api";
+import * as capella from "@lodestar/types/capella";
 import { BeaconConfig } from "@lodestar/config";
-import * as altair from "@lodestar/types/altair";
 
 export type PubKeyString = string;
 export type Slot = number;
 export type Bytes32 = string;
 
-export type OptimisticUpdate = altair.LightClientOptimisticUpdate;
-export type LightClientUpdate = altair.LightClientUpdate;
+export type OptimisticUpdate = capella.LightClientOptimisticUpdate;
+export type LightClientUpdate = capella.LightClientUpdate;
 
 export type GenesisData = {
   committee: PubKeyString[];

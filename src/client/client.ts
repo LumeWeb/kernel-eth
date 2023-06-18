@@ -1,8 +1,6 @@
 import {
-  Bytes32,
   ClientConfig,
   ExecutionInfo,
-  LightClientUpdate,
   OptimisticUpdate,
   VerifyWithReason,
 } from "./types.js";
@@ -20,21 +18,23 @@ import {
 import {
   computeSyncPeriodAtSlot,
   getCurrentSlot,
+  isValidMerkleBranch,
 } from "@lodestar/light-client/utils";
-import {
-  assertValidLightClientUpdate,
-  assertValidSignedHeader,
-} from "@lodestar/light-client/validation";
+import { assertValidSignedHeader } from "@lodestar/light-client/validation";
 import { SyncCommitteeFast } from "@lodestar/light-client";
-import bls from "@chainsafe/bls/switchable";
+import bls, { init } from "@chainsafe/bls/switchable";
 import { PublicKey } from "@chainsafe/bls/types.js";
-import { fromHexString, toHexString } from "@chainsafe/ssz";
-import * as altair from "@lodestar/types/altair";
+import { fromHexString } from "@chainsafe/ssz";
+import * as capella from "@lodestar/types/capella";
 import * as phase0 from "@lodestar/types/phase0";
-import * as bellatrix from "@lodestar/types/bellatrix";
-import { init } from "@chainsafe/bls/switchable";
 import { VerifyingProvider } from "./rpc/provider.js";
 import { digest } from "@chainsafe/as-sha256";
+import { ChainForkConfig } from "@lodestar/config";
+import { allForks } from "@lodestar/types";
+import {
+  BLOCK_BODY_EXECUTION_PAYLOAD_DEPTH as EXECUTION_PAYLOAD_DEPTH,
+  BLOCK_BODY_EXECUTION_PAYLOAD_INDEX as EXECUTION_PAYLOAD_INDEX,
+} from "@lodestar/params";
 
 export default class Client {
   latestCommittee?: Uint8Array[];
@@ -117,29 +117,56 @@ export default class Client {
     committee: Uint8Array[],
     update: OptimisticUpdate
   ): Promise<VerifyWithReason> {
-    const { attestedHeader: header, syncAggregate } = update;
-    const headerBlockRoot = phase0.ssz.BeaconBlockHeader.hashTreeRoot(
-      header.beacon
-    );
-    const committeeFast = this.deserializeSyncCommittee(committee);
     try {
-      await assertValidSignedHeader(
-        this.config.chainConfig,
-        committeeFast,
-        syncAggregate,
-        headerBlockRoot,
-        header.beacon.slot
+      const { attestedHeader: header, syncAggregate } = update;
+      const headerBlockRoot = phase0.ssz.BeaconBlockHeader.hashTreeRoot(
+        header.beacon
       );
-    } catch (e) {
-      return { correct: false, reason: "invalid signatures" };
-    }
+      const committeeFast = this.deserializeSyncCommittee(committee);
+      try {
+        assertValidSignedHeader(
+          this.config.chainConfig,
+          committeeFast,
+          syncAggregate,
+          headerBlockRoot,
+          header.beacon.slot
+        );
+      } catch (e) {
+        return { correct: false, reason: "invalid signatures" };
+      }
 
-    const participation =
-      syncAggregate.syncCommitteeBits.getTrueBitIndexes().length;
-    if (participation < BEACON_SYNC_SUPER_MAJORITY) {
-      return { correct: false, reason: "insufficient signatures" };
+      const participation =
+        syncAggregate.syncCommitteeBits.getTrueBitIndexes().length;
+      if (participation < BEACON_SYNC_SUPER_MAJORITY) {
+        return { correct: false, reason: "insufficient signatures" };
+      }
+
+      if (!this.isValidLightClientHeader(this.config.chainConfig, header)) {
+        return { correct: false, reason: "invalid header" };
+      }
+
+      return { correct: true };
+    } catch (e) {
+      console.error(e);
+      return { correct: false, reason: (e as Error).message };
     }
-    return { correct: true };
+  }
+
+  private isValidLightClientHeader(
+    config: ChainForkConfig,
+    header: allForks.LightClientHeader
+  ): boolean {
+    return isValidMerkleBranch(
+      config
+        .getExecutionForkTypes(header.beacon.slot)
+        .ExecutionPayloadHeader.hashTreeRoot(
+          (header as capella.LightClientHeader).execution
+        ),
+      (header as capella.LightClientHeader).executionBranch,
+      EXECUTION_PAYLOAD_DEPTH,
+      EXECUTION_PAYLOAD_INDEX,
+      header.beacon.bodyRoot
+    );
   }
 
   public async getNextValidExecutionInfo(
@@ -247,33 +274,9 @@ export default class Client {
     console.log(
       `Optimistic update verified for slot ${updateJSON.attested_header.beacon.slot}`
     );
-    return this.getExecutionFromBlockRoot(
-      updateJSON.attested_header.beacon.slot,
-      updateJSON.attested_header.beacon.body_root
-    );
-  }
-
-  private async getExecutionFromBlockRoot(
-    slot: bigint,
-    expectedBlockRoot: Bytes32
-  ): Promise<ExecutionInfo> {
-    const res = await this.prover.callback("consensus_block", {
-      block: slot,
-    });
-    const blockJSON = res.message.body;
-    const block = bellatrix.ssz.BeaconBlockBody.fromJson(blockJSON);
-    const blockRoot = toHexString(
-      bellatrix.ssz.BeaconBlockBody.hashTreeRoot(block)
-    );
-    if (blockRoot !== expectedBlockRoot) {
-      throw Error(
-        `block provided by the beacon chain api doesn't match the expected block root`
-      );
-    }
-
     return {
-      blockhash: blockJSON.execution_payload.block_hash,
-      blockNumber: blockJSON.execution_payload.block_number,
+      blockhash: updateJSON.attested_header.execution.block_hash,
+      blockNumber: updateJSON.attested_header.execution.block_number,
     };
   }
 
@@ -294,6 +297,6 @@ export default class Client {
     return digest(concatUint8Array(committee));
   }
   private optimisticUpdateFromJSON(update: any): OptimisticUpdate {
-    return altair.ssz.LightClientOptimisticUpdate.fromJson(update);
+    return capella.ssz.LightClientOptimisticUpdate.fromJson(update);
   }
 }
