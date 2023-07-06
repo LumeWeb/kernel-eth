@@ -3,15 +3,27 @@
     "version": "0.1.0",
     "license": "MIT",
     "type": "module",
+    "readme": "ERROR: No README data found!",
+    "_id": "@lumeweb/kernel-eth@0.1.0",
+    "repository": {
+        "type": "git",
+        "url": "gitea@git.lumeweb.com:LumeWeb/kernel-eth.git"
+    },
     "scripts": {
-        "build-script": "tsc --project tsconfig.build.json && mv dist-build/build.js dist-build/build.mjs",
-        "compile": "npm run build-script && rimraf node_modules/@lumeweb/dht-rpc-client/node_modules node_modules/@lumeweb/kernel-dht-client/node_modules/libkmodule && node build.js",
-        "build": "npm run compile && node ./dist-build/build.mjs dev"
+        "prepare": "presetter bootstrap",
+        "build": "shx touch nop.js;run build",
+        "semantic-release": "semantic-release"
+    },
+    "devDependencies": {
+        "@lumeweb/presetter-kernel-module-preset": "^0.1.0-develop.30",
+        "@rollup/plugin-alias": "^5.0.0",
+        "patch-package": "^7.0.0",
+        "rollup-plugin-ignore-import": "^1.3.2"
     },
     "dependencies": {
         "@chainsafe/as-sha256": "0.4.1",
-        "@chainsafe/bls": "git+https://git.lumeweb.com/LumeWeb/chainsafe-bls.git",
-        "@chainsafe/blst": "^0.2.8",
+        "@chainsafe/bls": "^7.1.1",
+        "@chainsafe/blst": "0.2.9",
         "@chainsafe/ssz": "0.11.1",
         "@ethereumjs/block": "^4.2.1",
         "@ethereumjs/blockchain": "^6.2.1",
@@ -25,40 +37,17 @@
         "@lodestar/light-client": "^1.7.2",
         "@lodestar/params": "^1.8.0",
         "@lodestar/types": "^1.7.2",
-        "@lumeweb/kernel-rpc-client": "git+https://git.lumeweb.com/LumeWeb/kernel-rpc-client.git",
+        "@lumeweb/kernel-rpc-client": "^0.0.2-develop.1",
+        "@lumeweb/libkernel": "^0.1.0-develop.14",
+        "@lumeweb/libweb": "^0.2.0-develop.21",
         "decimal.js": "^10.4.3",
         "ethers": "^6.3.0",
         "json-rpc-2.0": "^1.5.1",
-        "libkmodule": "^0.2.53",
         "lodash": "^4.17.21",
-        "path-browserify": "^1.0.1",
         "rlp": "^3.0.0",
-        "stream-browserify": "^3.0.0",
         "web3-core": "^1.9.0",
         "web3-core-method": "^1.9.0",
         "web3-eth": "^1.9.0",
         "yaml": "^2.2.1"
-    },
-    "devDependencies": {
-        "@lumeweb/interface-relay": "git+https://git.lumeweb.com/LumeWeb/interface-relay.git",
-        "@scure/bip39": "^1.2.0",
-        "@skynetlabs/skynet-nodejs": "^2.9.0",
-        "@types/lodash": "^4.14.194",
-        "@types/node": "^18.15.11",
-        "@types/read": "^0.0.29",
-        "buffer": "^6.0.3",
-        "cli-progress": "^3.12.0",
-        "crypto-browserify": "^3.12.0",
-        "esbuild": "^0.17.17",
-        "esbuild-plugin-wasm": "^1.0.0",
-        "prettier": "^2.8.7",
-        "process": "^0.11.10",
-        "read": "^2.1.0",
-        "typescript": "^5.0.4"
-    },
-    "browser": {
-        "crypto": "crypto-browserify",
-        "stream": "stream-browserify",
-        "path": "path-browserify"
     }
 }

@@ -1,4 +1,8 @@
-import { ActiveQuery, addHandler, handleMessage } from "libkmodule";
+import {
+  ActiveQuery,
+  addHandler,
+  handleMessage,
+} from "@lumeweb/libkernel/module";
 import { createClient, RpcNetwork } from "@lumeweb/kernel-rpc-client";
 import Client from "./client/client.js";
 import { Prover } from "./client/index.js";
@@ -13,7 +17,7 @@ let moduleReady: Promise<void> = new Promise((resolve) => {
 let client: Client;
 let rpc: RpcNetwork;
 
-addHandler("presentSeed", handlePresentSeed);
+addHandler("presentKey", handlePresentKey);
 addHandler("ready", handleReady);
 
 [
@@ -50,7 +54,7 @@ addHandler("ready", handleReady);
   });
 });
 
-async function handlePresentSeed() {
+async function handlePresentKey() {
   await setup();
   moduleReadyResolve();
 }
@@ -60,7 +64,7 @@ async function handleRpcMethod(aq: ActiveQuery) {
   return client.provider.rpcMethod(
     aq.callerInput?.method,
     // @ts-ignore
-    aq.callerInput?.params as any[]
+    aq.callerInput?.params as any[],
   );
 }
 

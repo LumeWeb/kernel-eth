@@ -1,0 +1,76 @@
+diff --git a/node_modules/@chainsafe/bls/lib/herumi/index.js b/node_modules/@chainsafe/bls/lib/herumi/index.js
+index 4ed8fdd..f979984 100644
+--- a/node_modules/@chainsafe/bls/lib/herumi/index.js
++++ b/node_modules/@chainsafe/bls/lib/herumi/index.js
+@@ -1,16 +1,20 @@
+-import { SecretKey } from "./secretKey.js";
+-import { PublicKey } from "./publicKey.js";
+-import { Signature } from "./signature.js";
+-import { init, destroy } from "./context.js";
+-import { functionalInterfaceFactory } from "../functional.js";
+-await init();
+-export * from "../constants.js";
+-export { SecretKey, PublicKey, Signature, init, destroy };
+-export const bls = {
+-    implementation: "herumi",
+-    SecretKey,
+-    PublicKey,
+-    Signature,
+-    ...functionalInterfaceFactory({ SecretKey, PublicKey, Signature }),
+-};
+-export default bls;
++import { SecretKey } from './secretKey.js'
++import { PublicKey } from './publicKey.js'
++import { Signature } from './signature.js'
++import { init, destroy } from './context.js'
++import { functionalInterfaceFactory } from '../functional.js'
++
++export * from '../constants.js'
++export { SecretKey, PublicKey, Signature, init, destroy }
++
++export const bls = async () => {
++    await init()
++    return {
++        implementation: 'herumi',
++        SecretKey,
++        PublicKey,
++        Signature,
++        ...functionalInterfaceFactory({ SecretKey, PublicKey, Signature }),
++    }
++}
++export default bls
+diff --git a/node_modules/@chainsafe/bls/lib/index.d.ts b/node_modules/@chainsafe/bls/lib/index.d.ts
+index 35a9432..097a938 100644
+--- a/node_modules/@chainsafe/bls/lib/index.d.ts
++++ b/node_modules/@chainsafe/bls/lib/index.d.ts
+@@ -1,3 +1,3 @@
+ import type { IBls } from "./types.js";
+-declare let bls: IBls;
++export declare const bls: () => Promise<IBls>;
+ export default bls;
+diff --git a/node_modules/@chainsafe/bls/lib/index.js b/node_modules/@chainsafe/bls/lib/index.js
+index c2a5bdf..9572018 100644
+--- a/node_modules/@chainsafe/bls/lib/index.js
++++ b/node_modules/@chainsafe/bls/lib/index.js
+@@ -1,11 +1,14 @@
+ import { getImplementation } from "./getImplementation.js";
+ // Thanks https://github.com/iliakan/detect-node/blob/master/index.esm.js
+ const isNode = Object.prototype.toString.call(typeof process !== "undefined" ? process : 0) === "[object process]";
+-let bls;
+-try {
+-    bls = await getImplementation(isNode ? "blst-native" : "herumi");
+-}
+-catch (e) {
+-    bls = await getImplementation("herumi");
+-}
++export const bls = async () => {
++    let bls;
++    try {
++        bls = await getImplementation(isNode ? "blst-native" : "herumi");
++    }
++    catch (e) {
++        bls = await getImplementation("herumi");
++    }
++    return bls;
++};
+ export default bls;

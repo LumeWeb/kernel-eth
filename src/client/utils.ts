@@ -1,15 +1,8 @@
-import Decimal from "decimal.js";
 import { fromHexString, toHexString } from "@chainsafe/ssz";
 import bls from "@chainsafe/bls/switchable";
 import { createBeaconConfig } from "@lodestar/config";
 import { mainnetConfig } from "./constants.js";
 import { networksChainConfig } from "@lodestar/config/networks";
-
-//import _ from "lodash";
-
-export function logFloor(x: number, base: number = 2) {
-  return Decimal.log(x, base).floor().toNumber();
-}
 
 export function concatUint8Array(data: Uint8Array[]) {
   const l = data.reduce((l, d) => l + d.length, 0);
@@ -32,7 +25,7 @@ export function isCommitteeSame(a: Uint8Array[], b: Uint8Array[]): boolean {
 }
 
 export function generateRandomSyncCommittee(): Uint8Array[] {
-  let res = [];
+  let res: Uint8Array[] = [];
   // TODO: change 512 to constant
   for (let i = 0; i < 512; i++) {
     res.push(bls.SecretKey.fromKeygen().toPublicKey().toBytes());
@@ -79,26 +72,10 @@ export async function wait(ms: number) {
   });
 }
 
-/*
-export function deepTypecast<T>(
-  obj: any,
-  checker: (val: any) => boolean,
-  caster: (val: T) => any
-): any {
-  return _.forEach(obj, (val: any, key: any, obj: any) => {
-    obj[key] = checker(val)
-      ? caster(val)
-      : _.isObject(val)
-      ? deepTypecast(val, checker, caster)
-      : val;
-  });
-}
-*/
-
 export function getDefaultClientConfig() {
   const chainConfig = createBeaconConfig(
     networksChainConfig.mainnet,
-    fromHexString(mainnetConfig.genesis_validator_root)
+    fromHexString(mainnetConfig.genesis_validator_root),
   );
   return {
     genesis: {

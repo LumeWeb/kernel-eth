@@ -1,4 +1,4 @@
-import { InvalidParamsError } from './errors';
+import { InvalidParamsError } from "./errors.js";
 
 // Most of the validations are taken from:
 // https://github.com/ethereumjs/ethereumjs-monorepo/blob/master/packages/client/lib/rpc/validation.ts
@@ -30,13 +30,13 @@ export const validators = {
    * @param index index of parameter
    */
   hex(params: any[], index: number) {
-    if (typeof params[index] !== 'string') {
+    if (typeof params[index] !== "string") {
       throw new InvalidParamsError(
         `invalid argument ${index}: argument must be a hex string`,
       );
     }
 
-    if (params[index].substr(0, 2) !== '0x') {
+    if (params[index].substr(0, 2) !== "0x") {
       throw new InvalidParamsError(
         `invalid argument ${index}: hex string without 0x prefix`,
       );
@@ -67,14 +67,14 @@ export const validators = {
   blockOption(params: any[], index: number) {
     const blockOption = params[index];
 
-    if (typeof blockOption !== 'string') {
+    if (typeof blockOption !== "string") {
       throw new InvalidParamsError(
         `invalid argument ${index}: argument must be a string`,
       );
     }
 
     try {
-      if (['latest', 'earliest', 'pending'].includes(blockOption)) {
+      if (["latest", "earliest", "pending"].includes(blockOption)) {
         return;
       }
       return this.hex([blockOption], 0);
@@ -91,7 +91,7 @@ export const validators = {
    * @param index index of parameter
    */
   bool(params: any[], index: number) {
-    if (typeof params[index] !== 'boolean') {
+    if (typeof params[index] !== "boolean") {
       throw new InvalidParamsError(
         `invalid argument ${index}: argument is not boolean`,
       );
@@ -118,7 +118,7 @@ export const validators = {
   transaction(params: any[], index: number) {
     const tx = params[index];
 
-    if (typeof tx !== 'object') {
+    if (typeof tx !== "object") {
       throw new InvalidParamsError(
         `invalid argument ${index}: argument must be an object`,
       );

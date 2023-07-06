@@ -24,7 +24,7 @@ export default class Prover implements IProver {
   async getSyncUpdate(period: number): Promise<LightClientUpdate> {
     const res = await this.callback("consensus_committee_period", { period });
     return LightClientUpdateSSZ.deserialize(
-      Uint8Array.from(Object.values(res))
+      Uint8Array.from(Object.values(res)),
     );
   }
 
@@ -39,7 +39,7 @@ export default class Prover implements IProver {
   async getCommitteeHash(
     period: number,
     currentPeriod: number,
-    cacheCount: number
+    cacheCount: number,
   ): Promise<Uint8Array> {
     const _count = Math.min(currentPeriod - period + 1, cacheCount);
     if (!this.cachedHashes.has(period)) {

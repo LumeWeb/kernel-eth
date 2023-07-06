@@ -23,7 +23,8 @@ import {
 import { assertValidSignedHeader } from "@lodestar/light-client/validation";
 import { SyncCommitteeFast } from "@lodestar/light-client";
 import bls, { init } from "@chainsafe/bls/switchable";
-import { PublicKey } from "@chainsafe/bls/types.js";
+// @ts-ignore
+import type { PublicKey } from "@chainsafe/bls/lib/types.js";
 import { fromHexString } from "@chainsafe/ssz";
 import * as capella from "@lodestar/types/capella";
 import * as phase0 from "@lodestar/types/phase0";
@@ -42,7 +43,7 @@ export default class Client {
   latestBlockHash?: string;
   private config: ClientConfig = getDefaultClientConfig();
   private genesisCommittee: Uint8Array[] = this.config.genesis.committee.map(
-    (pk) => fromHexString(pk)
+    (pk) => fromHexString(pk),
   );
   private genesisPeriod = computeSyncPeriodAtSlot(this.config.genesis.slot);
   private genesisTime = this.config.genesis.time;
@@ -76,11 +77,11 @@ export default class Client {
       const provider = new VerifyingProvider(
         this.rpcCallback,
         blockNumber,
-        blockhash
+        blockhash,
       );
       this.subscribe((ei) => {
         console.log(
-          `Recieved a new blockheader: ${ei.blockNumber} ${ei.blockhash}`
+          `Recieved a new blockheader: ${ei.blockNumber} ${ei.blockhash}`,
         );
         provider.update(ei.blockhash, ei.blockNumber);
       });
@@ -94,7 +95,7 @@ export default class Client {
 
   public getCurrentPeriod(): number {
     return computeSyncPeriodAtSlot(
-      getCurrentSlot(this.config.chainConfig, this.genesisTime)
+      getCurrentSlot(this.config.chainConfig, this.genesisTime),
     );
   }
 
@@ -115,12 +116,12 @@ export default class Client {
 
   async optimisticUpdateVerify(
     committee: Uint8Array[],
-    update: OptimisticUpdate
+    update: OptimisticUpdate,
   ): Promise<VerifyWithReason> {
     try {
       const { attestedHeader: header, syncAggregate } = update;
       const headerBlockRoot = phase0.ssz.BeaconBlockHeader.hashTreeRoot(
-        header.beacon
+        header.beacon,
       );
       const committeeFast = this.deserializeSyncCommittee(committee);
       try {
@@ -129,7 +130,7 @@ export default class Client {
           committeeFast,
           syncAggregate,
           headerBlockRoot,
-          header.beacon.slot
+          header.beacon.slot,
         );
       } catch (e) {
         return { correct: false, reason: "invalid signatures" };
@@ -154,27 +155,27 @@ export default class Client {
 
   private isValidLightClientHeader(
     config: ChainForkConfig,
-    header: allForks.LightClientHeader
+    header: allForks.LightClientHeader,
   ): boolean {
     return isValidMerkleBranch(
       config
         .getExecutionForkTypes(header.beacon.slot)
         .ExecutionPayloadHeader.hashTreeRoot(
-          (header as capella.LightClientHeader).execution
+          (header as capella.LightClientHeader).execution,
         ),
       (header as capella.LightClientHeader).executionBranch,
       EXECUTION_PAYLOAD_DEPTH,
       EXECUTION_PAYLOAD_INDEX,
-      header.beacon.bodyRoot
+      header.beacon.bodyRoot,
     );
   }
 
   public async getNextValidExecutionInfo(
-    retry: number = 10
+    retry: number = 10,
   ): Promise<ExecutionInfo> {
     if (retry === 0)
       throw new Error(
-        "no valid execution payload found in the given retry limit"
+        "no valid execution payload found in the given retry limit",
       );
     const ei = await this.getLatestExecution();
     if (ei) return ei;
@@ -201,7 +202,7 @@ export default class Client {
     let startPeriod = this.genesisPeriod;
 
     let lastCommitteeHash: Uint8Array = this.getCommitteeHash(
-      this.genesisCommittee
+      this.genesisCommittee,
     );
 
     for (let period = startPeriod + 1; period <= currentPeriod; period++) {
@@ -209,11 +210,11 @@ export default class Client {
         lastCommitteeHash = await this.prover.getCommitteeHash(
           period,
           currentPeriod,
-          DEFAULT_BATCH_SIZE
+          DEFAULT_BATCH_SIZE,
         );
       } catch (e: any) {
         throw new Error(
-          `failed to fetch committee hash for prover at period(${period}): ${e.meessage}`
+          `failed to fetch committee hash for prover at period(${period}): ${e.meessage}`,
         );
       }
     }
@@ -225,7 +226,7 @@ export default class Client {
     let startPeriod = this.latestPeriod;
 
     let lastCommitteeHash: Uint8Array = this.getCommitteeHash(
-      this.latestCommittee as Uint8Array[]
+      this.latestCommittee as Uint8Array[],
     );
 
     for (let period = startPeriod + 1; period <= currentPeriod; period++) {
@@ -233,11 +234,11 @@ export default class Client {
         lastCommitteeHash = await this.prover.getCommitteeHash(
           period,
           currentPeriod,
-          DEFAULT_BATCH_SIZE
+          DEFAULT_BATCH_SIZE,
         );
       } catch (e: any) {
         throw new Error(
-          `failed to fetch committee hash for prover at period(${period}): ${e.meessage}`
+          `failed to fetch committee hash for prover at period(${period}): ${e.meessage}`,
         );
       }
     }
@@ -246,7 +247,7 @@ export default class Client {
 
   async getCommittee(
     period: number,
-    expectedCommitteeHash: Uint8Array | null
+    expectedCommitteeHash: Uint8Array | null,
   ): Promise<Uint8Array[]> {
     if (period === this.genesisPeriod) return this.genesisCommittee;
     if (!expectedCommitteeHash)
@@ -260,19 +261,19 @@ export default class Client {
 
   private async getLatestExecution(): Promise<ExecutionInfo | null> {
     const updateJSON = await this.prover.callback(
-      "consensus_optimistic_update"
+      "consensus_optimistic_update",
     );
     const update = this.optimisticUpdateFromJSON(updateJSON);
     const verify = await this.optimisticUpdateVerify(
       this.latestCommittee as Uint8Array[],
-      update
+      update,
     );
     if (!verify.correct) {
       console.error(`Invalid Optimistic Update: ${verify.reason}`);
       return null;
     }
     console.log(
-      `Optimistic update verified for slot ${updateJSON.attested_header.beacon.slot}`
+      `Optimistic update verified for slot ${updateJSON.attested_header.beacon.slot}`,
     );
     return {
       blockhash: updateJSON.attested_header.execution.block_hash,
@@ -281,7 +282,7 @@ export default class Client {
   }
 
   private deserializeSyncCommittee(
-    syncCommittee: Uint8Array[]
+    syncCommittee: Uint8Array[],
   ): SyncCommitteeFast {
     const pubkeys = this.deserializePubkeys(syncCommittee);
     return {

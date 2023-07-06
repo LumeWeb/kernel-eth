@@ -35,7 +35,10 @@ import {
   MAX_BLOCK_FUTURE,
   DEFAULT_BLOCK_PARAMETER,
 } from "./constants.js";
-import { headerDataFromWeb3Response, blockDataFromWeb3Response } from "./utils";
+import {
+  headerDataFromWeb3Response,
+  blockDataFromWeb3Response,
+} from "./utils.js";
 
 import { keccak256 } from "ethers";
 import { InternalError, InvalidParamsError } from "./errors.js";
@@ -68,14 +71,14 @@ export class VerifyingProvider {
       eth_estimateGas: this.estimateGas,
       eth_sendRawTransaction: this.sendRawTransaction,
       eth_getTransactionReceipt: this.getTransactionReceipt,
-    })
+    }),
   );
 
   constructor(
     rpcCallback: Function,
     blockNumber: bigint | number,
     blockHash: Bytes32,
-    chain: bigint | Chain = Chain.Mainnet
+    chain: bigint | Chain = Chain.Mainnet,
   ) {
     this.rpc = new RPC(rpcCallback);
     this.common = new Common({
@@ -93,7 +96,7 @@ export class VerifyingProvider {
       this.blockHashes[blockNumberHex] !== blockHash
     ) {
       console.log(
-        "Overriding an existing verified blockhash. Possibly the chain had a reorg"
+        "Overriding an existing verified blockhash. Possibly the chain had a reorg",
       );
     }
     const latestBlockNumber = this.latestBlockNumber;
@@ -119,7 +122,7 @@ export class VerifyingProvider {
 
   private async getBalance(
     addressHex: AddressHex,
-    blockOpt: BlockOpt = DEFAULT_BLOCK_PARAMETER
+    blockOpt: BlockOpt = DEFAULT_BLOCK_PARAMETER,
   ) {
     const header = await this.getBlockHeader(blockOpt);
     const address = Address.fromString(addressHex);
@@ -134,7 +137,7 @@ export class VerifyingProvider {
       address,
       [],
       header.stateRoot,
-      proof
+      proof,
     );
     if (!isAccountCorrect) {
       throw new InternalError("Invalid account proof provided by the RPC");
@@ -153,7 +156,7 @@ export class VerifyingProvider {
 
   private async getCode(
     addressHex: AddressHex,
-    blockOpt: BlockOpt = DEFAULT_BLOCK_PARAMETER
+    blockOpt: BlockOpt = DEFAULT_BLOCK_PARAMETER,
   ): Promise<HexString> {
     const header = await this.getBlockHeader(blockOpt);
     const res = await this.rpc.requestBatch([
@@ -177,7 +180,7 @@ export class VerifyingProvider {
       address,
       [],
       header.stateRoot,
-      accountProof
+      accountProof,
     );
     if (!isAccountCorrect) {
       throw new InternalError(`invalid account proof provided by the RPC`);
@@ -185,11 +188,11 @@ export class VerifyingProvider {
 
     const isCodeCorrect = await this.verifyCodeHash(
       code,
-      accountProof.codeHash
+      accountProof.codeHash,
     );
     if (!isCodeCorrect) {
       throw new InternalError(
-        `code provided by the RPC doesn't match the account's codeHash`
+        `code provided by the RPC doesn't match the account's codeHash`,
       );
     }
 
@@ -198,7 +201,7 @@ export class VerifyingProvider {
 
   private async getTransactionCount(
     addressHex: AddressHex,
-    blockOpt: BlockOpt = DEFAULT_BLOCK_PARAMETER
+    blockOpt: BlockOpt = DEFAULT_BLOCK_PARAMETER,
   ): Promise<HexString> {
     const header = await this.getBlockHeader(blockOpt);
     const address = Address.fromString(addressHex);
@@ -214,7 +217,7 @@ export class VerifyingProvider {
       address,
       [],
       header.stateRoot,
-      proof
+      proof,
     );
     if (!isAccountCorrect) {
       throw new InternalError(`invalid account proof provided by the RPC`);
@@ -225,7 +228,7 @@ export class VerifyingProvider {
 
   private async call(
     transaction: RPCTx,
-    blockOpt: BlockOpt = DEFAULT_BLOCK_PARAMETER
+    blockOpt: BlockOpt = DEFAULT_BLOCK_PARAMETER,
   ) {
     try {
       this.validateTx(transaction);
@@ -265,7 +268,7 @@ export class VerifyingProvider {
 
   private async estimateGas(
     transaction: RPCTx,
-    blockOpt: BlockOpt = DEFAULT_BLOCK_PARAMETER
+    blockOpt: BlockOpt = DEFAULT_BLOCK_PARAMETER,
   ) {
     try {
       this.validateTx(transaction);
@@ -284,7 +287,7 @@ export class VerifyingProvider {
         ? 2
         : transaction.accessList
         ? 1
-        : 0
+        : 0,
     );
     if (txType == BigInt(2)) {
       transaction.maxFeePerGas =
@@ -350,7 +353,7 @@ export class VerifyingProvider {
   }
 
   private async getTransactionReceipt(
-    txHash: Bytes32
+    txHash: Bytes32,
   ): Promise<JSONRPCReceipt | null> {
     const { result: receipt, success } = await this.rpc.request({
       method: "eth_getTransactionReceipt",
@@ -362,7 +365,7 @@ export class VerifyingProvider {
     const header = await this.getBlockHeader(receipt.blockNumber);
     const block = await this.getBlock(header);
     const index = block.transactions.findIndex(
-      (tx) => bufferToHex(tx.hash()) === txHash.toLowerCase()
+      (tx) => bufferToHex(tx.hash()) === txHash.toLowerCase(),
     );
     if (index === -1) {
       throw new InternalError("the recipt provided by the RPC is invalid");
@@ -453,7 +456,7 @@ export class VerifyingProvider {
     }
     const responses = _.chunk(
       rawResponse.map((r: any) => r.result),
-      2
+      2,
     ) as [AccountResponse, CodeResponse][];
 
     for (let i = 0; i < accessList.length; i++) {
@@ -471,7 +474,7 @@ export class VerifyingProvider {
         address,
         storageKeys,
         header.stateRoot,
-        accountProof
+        accountProof,
       );
       if (!isAccountCorrect) {
         throw new InternalError(`invalid account proof provided by the RPC`);
@@ -480,7 +483,7 @@ export class VerifyingProvider {
       const isCodeCorrect = await this.verifyCodeHash(code, codeHash);
       if (!isCodeCorrect) {
         throw new InternalError(
-          `code provided by the RPC doesn't match the account's codeHash`
+          `code provided by the RPC doesn't match the account's codeHash`,
         );
       }
 
@@ -496,7 +499,7 @@ export class VerifyingProvider {
         await vm.stateManager.putContractStorage(
           address,
           setLengthLeft(toBuffer(storageAccess.key), 32),
-          setLengthLeft(toBuffer(storageAccess.value), 32)
+          setLengthLeft(toBuffer(storageAccess.value), 32),
         );
       }
 
@@ -527,7 +530,7 @@ export class VerifyingProvider {
         throw new InvalidParamsError("specified block is too far in future");
       } else if (blockNumber + MAX_BLOCK_HISTORY < this.latestBlockNumber) {
         throw new InvalidParamsError(
-          `specified block cannot older that ${MAX_BLOCK_HISTORY}`
+          `specified block cannot older that ${MAX_BLOCK_HISTORY}`,
         );
       }
       return blockNumber;
@@ -566,7 +569,7 @@ export class VerifyingProvider {
 
       if (!header.hash().equals(toBuffer(blockHash))) {
         throw new InternalError(
-          `blockhash doesn't match the blockInfo provided by the RPC`
+          `blockhash doesn't match the blockInfo provided by the RPC`,
         );
       }
       this.blockHeaders[blockHash] = header;
@@ -578,14 +581,14 @@ export class VerifyingProvider {
     address: Address,
     storageKeys: Bytes32[],
     stateRoot: Buffer,
-    proof: GetProof
+    proof: GetProof,
   ): Promise<boolean> {
     const trie = new Trie();
     const key = keccak256(address.toString());
     const expectedAccountRLP = await trie.verifyProof(
       stateRoot,
       toBuffer(key),
-      proof.accountProof.map((a) => toBuffer(a))
+      proof.accountProof.map((a) => toBuffer(a)),
     );
     const account = Account.fromAccountData({
       nonce: BigInt(proof.nonce),
@@ -607,12 +610,12 @@ export class VerifyingProvider {
     for (let i = 0; i < storageKeys.length; i++) {
       const sp = proof.storageProof[i];
       const key = keccak256(
-        bufferToHex(setLengthLeft(toBuffer(storageKeys[i]), 32))
+        bufferToHex(setLengthLeft(toBuffer(storageKeys[i]), 32)),
       );
       const expectedStorageRLP = await trie.verifyProof(
         toBuffer(proof.storageHash),
         toBuffer(key),
-        sp.proof.map((a) => toBuffer(a))
+        sp.proof.map((a) => toBuffer(a)),
       );
       const isStorageValid =
         (!expectedStorageRLP && sp.value === "0x0") ||
@@ -647,7 +650,7 @@ export class VerifyingProvider {
       BigInt(tx.maxPriorityFeePerGas) > BigInt(tx.maxFeePerGas)
     ) {
       throw new Error(
-        `maxPriorityFeePerGas (${tx.maxPriorityFeePerGas.toString()}) is bigger than maxFeePerGas (${tx.maxFeePerGas.toString()})`
+        `maxPriorityFeePerGas (${tx.maxPriorityFeePerGas.toString()}) is bigger than maxFeePerGas (${tx.maxFeePerGas.toString()})`,
       );
     }
   }
@@ -667,13 +670,13 @@ export class VerifyingProvider {
 
     if (!block.header.hash().equals(header.hash())) {
       throw new InternalError(
-        `BN(${header.number}): blockhash doest match the blockData provided by the RPC`
+        `BN(${header.number}): blockhash doest match the blockData provided by the RPC`,
       );
     }
 
     if (!(await block.validateTransactionsTrie())) {
       throw new InternalError(
-        `transactionTree doesn't match the transactions provided by the RPC`
+        `transactionTree doesn't match the transactions provided by the RPC`,
       );
     }
 
@@ -696,7 +699,7 @@ export class VerifyingProvider {
         this.blockHashes[parentBlockNumberHex] !== parentBlockHash
       ) {
         console.log(
-          "Overriding an existing verified blockhash. Possibly the chain had a reorg"
+          "Overriding an existing verified blockhash. Possibly the chain had a reorg",
         );
       }
       this.blockHashes[parentBlockNumberHex] = parentBlockHash;

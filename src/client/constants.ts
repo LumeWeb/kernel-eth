@@ -522,7 +522,7 @@ export const mainnetConfig = {
 };
 
 export const BEACON_SYNC_SUPER_MAJORITY = Math.ceil(
-  (BEACON_SYNC_COMMITTEE_SIZE * 2) / 3
+  (BEACON_SYNC_COMMITTEE_SIZE * 2) / 3,
 );
 
 // These are the rough numbers from benchmark experiments

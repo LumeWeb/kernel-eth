@@ -25,7 +25,7 @@ export class RPC {
   }
 
   async requestBatch(requests: RPCRequest[]) {
-    const res = [];
+    const res: RPCResponse[] = [];
     for (const request of requests) {
       const r = await this._retryRequest(request);
       res.push(r);
@@ -35,7 +35,7 @@ export class RPC {
 
   private async _retryRequest(
     _request: RPCRequest,
-    retry = 5
+    retry = 5,
   ): Promise<RPCResponse> {
     const request = {
       ..._request,
@@ -52,8 +52,8 @@ export class RPC {
           `RPC batch request failed after maximum retries: ${JSON.stringify(
             request,
             null,
-            2
-          )} ${JSON.stringify(res, null, 2)}`
+            2,
+          )} ${JSON.stringify(res, null, 2)}`,
         );
       }
     }

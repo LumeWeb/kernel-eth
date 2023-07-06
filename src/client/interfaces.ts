@@ -8,7 +8,7 @@ export interface IProver {
   getCommitteeHash(
     period: number,
     currentPeriod: number,
-    count: number
+    count: number,
   ): Promise<Uint8Array>;
 
   getSyncUpdate(period: number): Promise<LightClientUpdate>;

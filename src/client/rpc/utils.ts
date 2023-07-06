@@ -40,7 +40,7 @@ export function headerDataFromWeb3Response(blockInfo: any): HeaderData {
 }
 
 export function txDataFromWeb3Response(
-  txInfo: any
+  txInfo: any,
 ): TxData | AccessListEIP2930TxData | FeeMarketEIP1559TxData {
   return {
     ...txInfo,
