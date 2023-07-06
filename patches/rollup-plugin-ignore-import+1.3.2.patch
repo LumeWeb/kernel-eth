@@ -1,0 +1,13 @@
+diff --git a/node_modules/rollup-plugin-ignore-import/rollup-plugin-ignore-import.js b/node_modules/rollup-plugin-ignore-import/rollup-plugin-ignore-import.js
+index 01ff11a..13ae6c4 100644
+--- a/node_modules/rollup-plugin-ignore-import/rollup-plugin-ignore-import.js
++++ b/node_modules/rollup-plugin-ignore-import/rollup-plugin-ignore-import.js
+@@ -19,7 +19,7 @@ function noopImport(options) {
+ 
+   return {
+     transform: function transform(code, id) {
+-      if (!filter(id)) { return; }
++      if (!filter(id.replace(/\0/,''))) { return; }
+ 
+       var body = (options.body || options.body === '') ? options.body : 'export default undefined;';
+ 
