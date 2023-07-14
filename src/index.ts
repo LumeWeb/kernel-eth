@@ -2,10 +2,15 @@ import {
   ActiveQuery,
   addHandler,
   handleMessage,
+  logErr,
 } from "@lumeweb/libkernel/module";
 import { createClient, RpcNetwork } from "@lumeweb/kernel-rpc-client";
-import Client from "./client/client.js";
-import { Prover } from "./client/index.js";
+import {
+  Client as EthClient,
+  ConsensusCommitteeUpdateRequest,
+  createDefaultClient as createEthClient,
+} from "@lumeweb/libethsync/client";
+import * as capella from "@lodestar/types/capella";
 
 onmessage = handleMessage;
 
@@ -14,7 +19,7 @@ let moduleReady: Promise<void> = new Promise((resolve) => {
   moduleReadyResolve = resolve;
 });
 
-let client: Client;
+let client: EthClient;
 let rpc: RpcNetwork;
 
 addHandler("presentKey", handlePresentKey);
@@ -61,18 +66,14 @@ async function handlePresentKey() {
 
 async function handleRpcMethod(aq: ActiveQuery) {
   await moduleReady;
-  return client.provider.rpcMethod(
-    aq.callerInput?.method,
-    // @ts-ignore
-    aq.callerInput?.params as any[],
-  );
+  if (!client.isSynced) {
+    await client.sync();
+  }
+  return client.rpcCall(aq.callerInput?.method, aq.callerInput?.params);
 }
 
 async function consensusHandler(method: string, data: any) {
-  // @ts-ignore
-  await (
-    await rpc.ready
-  )();
+  await rpc.ready;
 
   while (true) {
     let query = await rpc.simpleQuery({
@@ -82,8 +83,8 @@ async function consensusHandler(method: string, data: any) {
         data,
       },
       options: {
-        relayTimeout: 10,
-        queryTimeout: 10,
+        relayTimeout: 30,
+        queryTimeout: 30,
       },
     });
 
@@ -96,16 +97,17 @@ async function consensusHandler(method: string, data: any) {
 }
 
 async function executionHandler(data: Map<string, string | any>) {
-  // @ts-ignore
-  await (
-    await rpc.ready
-  )();
+  await rpc.ready;
   while (true) {
     let query = await rpc.simpleQuery({
       query: {
         module: "eth",
         method: "execution_request",
         data,
+      },
+      options: {
+        relayTimeout: 30,
+        queryTimeout: 30,
       },
     });
 
@@ -119,14 +121,37 @@ async function executionHandler(data: Map<string, string | any>) {
 
 async function setup() {
   rpc = createClient();
-  // @ts-ignore
-  await (
-    await rpc.ready
-  )();
+  await rpc.ready;
 
-  const prover = new Prover(consensusHandler);
-  client = new Client(prover, executionHandler);
-  await client.sync();
+  client = createEthClient(
+    async (args: ConsensusCommitteeUpdateRequest) => {
+      const updates = await consensusHandler("consensus_updates", args);
+
+      return updates
+        .map((u) => new Uint8Array(Object.values(u)))
+        .map((u) => capella.ssz.LightClientUpdate.deserialize(u))
+        .map((u) => capella.ssz.LightClientUpdate.toJson(u));
+    },
+    executionHandler,
+    async () => {
+      const update = await consensusHandler("consensus_optimistic_update", {});
+
+      return capella.ssz.LightClientOptimisticUpdate.deserialize(
+        new Uint8Array(Object.values(update)),
+      );
+    },
+  );
+
+  let synced = false;
+
+  while (!synced) {
+    try {
+      await client.sync();
+      synced = true;
+    } catch (e) {
+      logErr(e.message);
+    }
+  }
 }
 
 async function handleReady(aq: ActiveQuery) {
