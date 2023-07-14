@@ -3,7 +3,21 @@
         "@lumeweb/presetter-kernel-module-preset"
     ],
     "config": {
-        "official": true,
-        "browser": true
+        "vite": {
+            "resolve": {
+                "alias": {
+                    "ethereum-cryptography/secp256k1": "ethereum-cryptography/secp256k1.js",
+                    "ethereum-cryptography/keccak": "ethereum-cryptography/keccak.js",
+                    "ethereum-cryptography/utils": "ethereum-cryptography/utils.js",
+                    "ethereum-cryptography/sha256": "ethereum-cryptography/sha256.js",
+                    "ethereum-cryptography/ripemd160": "ethereum-cryptography/ripemd160.js",
+                    "bigint-mod-arith": "@lumeweb/bigint-mod-arith",
+                    "bigint-crypto-utils": "@lumeweb/bigint-crypto-utils"
+                }
+            },
+            "optimize": {
+                "./blst-native/index.js": "export default undefined;"
+            }
+        }
     }
 }
