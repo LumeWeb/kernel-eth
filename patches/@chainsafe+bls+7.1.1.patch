@@ -1,3 +1,16 @@
+diff --git a/node_modules/@chainsafe/bls/lib/getImplementation.js b/node_modules/@chainsafe/bls/lib/getImplementation.js
+index 9137cd4..ba8de8a 100644
+--- a/node_modules/@chainsafe/bls/lib/getImplementation.js
++++ b/node_modules/@chainsafe/bls/lib/getImplementation.js
+@@ -3,7 +3,7 @@ const isNode = Object.prototype.toString.call(typeof process !== "undefined" ? p
+ export async function getImplementation(impl = "herumi") {
+     switch (impl) {
+         case "herumi": {
+-            return (await import("./herumi/index.js")).bls;
++            return (await import("./herumi/index.js")).bls();
+         }
+         case "blst-native":
+             // Lazy import native bindings to prevent automatically importing binding.node files
 diff --git a/node_modules/@chainsafe/bls/lib/herumi/index.js b/node_modules/@chainsafe/bls/lib/herumi/index.js
 index 4ed8fdd..f979984 100644
 --- a/node_modules/@chainsafe/bls/lib/herumi/index.js
