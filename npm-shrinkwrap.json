@@ -12,7 +12,7 @@
             "dependencies": {
                 "@lumeweb/bigint-crypto-utils": "^1.0.0",
                 "@lumeweb/kernel-rpc-client": "0.0.2-develop.4",
-                "@lumeweb/libethsync": "0.1.0-develop.39",
+                "@lumeweb/libethsync": "0.1.0-develop.42",
                 "@lumeweb/libkernel": "0.1.0-develop.16",
                 "@lumeweb/libweb": "0.2.0-develop.22"
             },
@@ -3115,9 +3115,9 @@
             }
         },
         "node_modules/@lumeweb/libethsync": {
-            "version": "0.1.0-develop.39",
-            "resolved": "https://registry.npmjs.org/@lumeweb/libethsync/-/libethsync-0.1.0-develop.39.tgz",
-            "integrity": "sha512-SB65m2I/wPPkulKjEv3iQW9+7umAgixO3Nxx0BCnucUVOqE6IZCUoK9Fkz0AYMjneIYzUfUHMMVZTpXx8bqsVA==",
+            "version": "0.1.0-develop.42",
+            "resolved": "https://registry.npmjs.org/@lumeweb/libethsync/-/libethsync-0.1.0-develop.42.tgz",
+            "integrity": "sha512-pdKi+iVj82L4lKYeFzdLimZOgkDRRYlRr0zlfjS+Sk6xj5rLnf8q9jgYJtjnLCMfgkwldsdY22jCpvq17v3wWA==",
             "dependencies": {
                 "@chainsafe/as-sha256": "^0.3.1",
                 "@chainsafe/bls": "7.1.1",
