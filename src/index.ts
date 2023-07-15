@@ -2,6 +2,7 @@ import {
   ActiveQuery,
   addHandler,
   handleMessage,
+  log,
   logErr,
 } from "@lumeweb/libkernel/module";
 import { createClient, RpcNetwork } from "@lumeweb/kernel-rpc-client";
@@ -140,6 +141,9 @@ async function setup() {
         new Uint8Array(Object.values(update)),
       );
     },
+    log,
+    logErr,
+    500,
   );
 
   let synced = false;
