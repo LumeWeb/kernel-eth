@@ -5,7 +5,11 @@ import {
   log,
   logErr,
 } from "@lumeweb/libkernel/module";
-import { createClient, RpcNetwork } from "@lumeweb/kernel-rpc-client";
+import {
+  createClient as createRpcClient,
+  RpcNetwork,
+} from "@lumeweb/kernel-rpc-client";
+import { createClient as createNetworkRegistryClient } from "@lumeweb/kernel-network-registry-client";
 import {
   Client as EthClient,
   ConsensusCommitteeUpdateRequest,
@@ -14,6 +18,9 @@ import {
 import * as capella from "@lodestar/types/capella";
 
 onmessage = handleMessage;
+
+const TYPES = ["blockchain"];
+const networkRegistry = createNetworkRegistryClient();
 
 let moduleReadyResolve: Function;
 let moduleReady: Promise<void> = new Promise((resolve) => {
@@ -24,6 +31,7 @@ let client: EthClient;
 let rpc: RpcNetwork;
 
 addHandler("presentKey", handlePresentKey);
+addHandler("register", handleRegister);
 addHandler("ready", handleReady);
 
 [
@@ -121,7 +129,7 @@ async function executionHandler(data: Map<string, string | any>) {
 }
 
 async function setup() {
-  rpc = createClient();
+  rpc = createRpcClient();
   await rpc.ready;
 
   client = createEthClient(
@@ -160,6 +168,12 @@ async function setup() {
 
 async function handleReady(aq: ActiveQuery) {
   await moduleReady;
+
+  aq.respond();
+}
+
+async function handleRegister(aq: ActiveQuery) {
+  await networkRegistry.registerNetwork(TYPES);
 
   aq.respond();
 }

@@ -23,6 +23,7 @@
     },
     "dependencies": {
         "@lumeweb/bigint-crypto-utils": "^1.0.0",
+        "@lumeweb/kernel-network-registry-client": "^0.1.0-develop.2",
         "@lumeweb/kernel-rpc-client": "0.0.2-develop.4",
         "@lumeweb/libethsync": "0.1.0-develop.42",
         "@lumeweb/libkernel": "0.1.0-develop.16",
