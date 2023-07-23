@@ -12,7 +12,7 @@
             "dependencies": {
                 "@lumeweb/bigint-crypto-utils": "^1.0.0",
                 "@lumeweb/kernel-network-registry-client": "^0.1.0-develop.4",
-                "@lumeweb/kernel-rpc-client": "0.0.2-develop.9",
+                "@lumeweb/kernel-rpc-client": "0.0.2-develop.10",
                 "@lumeweb/libethsync": "0.1.0-develop.42",
                 "@lumeweb/libkernel": "0.1.0-develop.16",
                 "@lumeweb/libweb": "0.2.0-develop.22"
@@ -3127,9 +3127,9 @@
             }
         },
         "node_modules/@lumeweb/kernel-rpc-client": {
-            "version": "0.0.2-develop.9",
-            "resolved": "https://registry.npmjs.org/@lumeweb/kernel-rpc-client/-/kernel-rpc-client-0.0.2-develop.9.tgz",
-            "integrity": "sha512-i5bMN6eCTivQNq2dDLluWX4+8y2flTr8jpf3BFJSUNYkzEpEPdXqrtRxQumatMYixu4dpjE7IQgNrBQg8b739g==",
+            "version": "0.0.2-develop.10",
+            "resolved": "https://registry.npmjs.org/@lumeweb/kernel-rpc-client/-/kernel-rpc-client-0.0.2-develop.10.tgz",
+            "integrity": "sha512-jDpFQDel0Mj8xej82Zsezu1r3sXrjDF5lF9eQYz9kkhfPIM0wuRXI8eKHj3vnTRiW0fWTL0A0xQ1zgEBdi2+lg==",
             "dependencies": {
                 "@lumeweb/interface-relay": "^0.0.2-develop.3",
                 "@lumeweb/libkernel": "^0.1.0-develop.16",
