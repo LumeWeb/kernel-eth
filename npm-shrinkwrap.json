@@ -11,11 +11,12 @@
             "license": "MIT",
             "dependencies": {
                 "@lumeweb/bigint-crypto-utils": "^1.0.0",
-                "@lumeweb/kernel-network-registry-client": "^0.1.0-develop.4",
+                "@lumeweb/kernel-network-registry-client": "^0.1.0-develop.5",
                 "@lumeweb/kernel-rpc-client": "0.0.2-develop.10",
-                "@lumeweb/libethsync": "0.1.0-develop.42",
+                "@lumeweb/libethsync": "0.1.0-develop.45",
                 "@lumeweb/libkernel": "0.1.0-develop.16",
-                "@lumeweb/libweb": "0.2.0-develop.22"
+                "@lumeweb/libweb": "0.2.0-develop.22",
+                "p-defer": "^4.0.0"
             },
             "devDependencies": {
                 "@lumeweb/presetter-kernel-module-preset": "0.1.0-develop.42",
@@ -3098,9 +3099,9 @@
             }
         },
         "node_modules/@lumeweb/kernel-network-registry-client": {
-            "version": "0.1.0-develop.4",
-            "resolved": "https://registry.npmjs.org/@lumeweb/kernel-network-registry-client/-/kernel-network-registry-client-0.1.0-develop.4.tgz",
-            "integrity": "sha512-41VKVCJ71evA+uUdoVxsxLx2hP029Hdv0jmasvVBh/WuSyYiDUm47pdXa+4ct8fIwsLHLCzpFAR/CkpL2F/kog==",
+            "version": "0.1.0-develop.5",
+            "resolved": "https://registry.npmjs.org/@lumeweb/kernel-network-registry-client/-/kernel-network-registry-client-0.1.0-develop.5.tgz",
+            "integrity": "sha512-4ijBHvJKtiOrGrzJkytmNBNa0FpRy8y9w2OmzxP1yA4aCjVq5hxqKR0NSupXeBjhMNCD8Va3aM0a6I7tGFnF1w==",
             "dependencies": {
                 "@lumeweb/libkernel": "^0.1.0-develop.20"
             }
@@ -3145,9 +3146,9 @@
             }
         },
         "node_modules/@lumeweb/libethsync": {
-            "version": "0.1.0-develop.42",
-            "resolved": "https://registry.npmjs.org/@lumeweb/libethsync/-/libethsync-0.1.0-develop.42.tgz",
-            "integrity": "sha512-pdKi+iVj82L4lKYeFzdLimZOgkDRRYlRr0zlfjS+Sk6xj5rLnf8q9jgYJtjnLCMfgkwldsdY22jCpvq17v3wWA==",
+            "version": "0.1.0-develop.45",
+            "resolved": "https://registry.npmjs.org/@lumeweb/libethsync/-/libethsync-0.1.0-develop.45.tgz",
+            "integrity": "sha512-ijyWt1onyYB0/lSfts8EaZ76DACKjc+xj1ZGOV2/VecETw66gJAr6uyySnTK7VLztzBv0FQA4yvNwUSj8uUIeQ==",
             "dependencies": {
                 "@chainsafe/as-sha256": "^0.3.1",
                 "@chainsafe/bls": "7.1.1",
@@ -3169,6 +3170,7 @@
                 "axios-retry": "^3.5.1",
                 "detect-node": "^2.1.0",
                 "ethereum-cryptography": "^2.0.0",
+                "events": "^3.3.0",
                 "node-cache": "^5.1.2",
                 "rlp": "^3.0.0",
                 "web3-types": "^1.0.1"

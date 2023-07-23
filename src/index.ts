@@ -16,16 +16,15 @@ import {
   createDefaultClient as createEthClient,
 } from "@lumeweb/libethsync/client";
 import * as capella from "@lodestar/types/capella";
+import defer from "p-defer";
 
 onmessage = handleMessage;
 
 const TYPES = ["blockchain"];
 const networkRegistry = createNetworkRegistryClient();
 
-let moduleReadyResolve: Function;
-let moduleReady: Promise<void> = new Promise((resolve) => {
-  moduleReadyResolve = resolve;
-});
+const moduleReadyDefer = defer();
+const clientInitDefer = defer();
 
 let client: EthClient;
 let rpc: RpcNetwork;
@@ -70,11 +69,11 @@ addHandler("ready", handleReady);
 
 async function handlePresentKey() {
   await setup();
-  moduleReadyResolve();
+  moduleReadyDefer.resolve();
 }
 
 async function handleRpcMethod(aq: ActiveQuery) {
-  await moduleReady;
+  await moduleReadyDefer.promise;
   if (!client.isSynced) {
     await client.sync();
   }
@@ -154,6 +153,8 @@ async function setup() {
     500,
   );
 
+  clientInitDefer.resolve();
+
   let synced = false;
 
   while (!synced) {
@@ -167,7 +168,7 @@ async function setup() {
 }
 
 async function handleReady(aq: ActiveQuery) {
-  await moduleReady;
+  await moduleReadyDefer.promise;
 
   aq.respond();
 }
