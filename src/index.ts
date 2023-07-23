@@ -189,7 +189,12 @@ async function handleStatus(aq: ActiveQuery) {
     sendUpdate();
   };
 
+  const chainSyncedListener = () => {
+    sendUpdate();
+  };
+
   client.on("update", chainProgressListener);
+  client.on("synced", chainSyncedListener);
 
   function sendUpdate() {
     aq.sendUpdate({
@@ -201,6 +206,7 @@ async function handleStatus(aq: ActiveQuery) {
 
   aq.setReceiveUpdate?.(() => {
     client.off("update", chainProgressListener);
+    client.off("synced", chainSyncedListener);
     aq.respond();
   });
 
