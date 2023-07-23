@@ -31,6 +31,7 @@ let rpc: RpcNetwork;
 
 addHandler("presentKey", handlePresentKey);
 addHandler("register", handleRegister);
+addHandler("status", handleStatus, { receiveUpdates: true });
 addHandler("ready", handleReady);
 
 [
@@ -177,4 +178,31 @@ async function handleRegister(aq: ActiveQuery) {
   await networkRegistry.registerNetwork(TYPES);
 
   aq.respond();
+}
+
+async function handleStatus(aq: ActiveQuery) {
+  await clientInitDefer.promise;
+  let chainProgress = 0;
+
+  const chainProgressListener = (currentUpdate, totalUpdates) => {
+    chainProgress = Math.round((currentUpdate / totalUpdates) * 100) / 100;
+    sendUpdate();
+  };
+
+  client.on("update", chainProgressListener);
+
+  function sendUpdate() {
+    aq.sendUpdate({
+      sync: Math.floor(chainProgress * 100),
+      peers: 1,
+      ready: client.isSynced,
+    });
+  }
+
+  aq.setReceiveUpdate?.(() => {
+    client.off("update", chainProgressListener);
+    aq.respond();
+  });
+
+  sendUpdate();
 }
