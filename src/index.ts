@@ -32,6 +32,7 @@ let rpc: RpcNetwork;
 addHandler("presentKey", handlePresentKey);
 addHandler("register", handleRegister);
 addHandler("status", handleStatus, { receiveUpdates: true });
+addHandler("name", handleName);
 addHandler("ready", handleReady);
 
 [
@@ -211,4 +212,7 @@ async function handleStatus(aq: ActiveQuery) {
   });
 
   sendUpdate();
+}
+function handleName(aq: ActiveQuery) {
+  aq.respond("Ethereum");
 }
