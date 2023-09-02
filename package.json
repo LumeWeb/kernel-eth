@@ -23,11 +23,10 @@
     },
     "dependencies": {
         "@lumeweb/bigint-crypto-utils": "^1.0.0",
-        "@lumeweb/kernel-network-registry-client": "^0.1.0-develop.5",
-        "@lumeweb/kernel-rpc-client": "0.0.2-develop.13",
-        "@lumeweb/libethsync": "0.1.0-develop.48",
-        "@lumeweb/libkernel": "0.1.0-develop.16",
-        "@lumeweb/libweb": "0.2.0-develop.22",
+        "@lumeweb/kernel-network-registry-client": "^0.1.0-develop.6",
+        "@lumeweb/kernel-rpc-client": "0.0.2-develop.15",
+        "@lumeweb/libethsync": "0.1.0-develop.49",
+        "@lumeweb/libkernel": "0.1.0-develop.38",
         "p-defer": "^4.0.0"
     },
     "overrides": {
