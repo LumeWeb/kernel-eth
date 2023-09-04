@@ -12,7 +12,7 @@
             "dependencies": {
                 "@lumeweb/bigint-crypto-utils": "^1.0.0",
                 "@lumeweb/kernel-network-registry-client": "^0.1.0-develop.7",
-                "@lumeweb/kernel-rpc-client": "0.0.2-develop.",
+                "@lumeweb/kernel-rpc-client": "0.0.2-develop.17",
                 "@lumeweb/libethsync": "0.1.0-develop.49",
                 "@lumeweb/libkernel": "0.1.0-develop.44",
                 "p-defer": "^4.0.0"
@@ -3106,13 +3106,13 @@
             }
         },
         "node_modules/@lumeweb/kernel-rpc-client": {
-            "version": "0.0.2-develop.15",
-            "resolved": "https://registry.npmjs.org/@lumeweb/kernel-rpc-client/-/kernel-rpc-client-0.0.2-develop.15.tgz",
-            "integrity": "sha512-PoMRvJuMqSE5jFmj++Fz23bJhozp/4euXf3yEIFeB/dcoXIhKUpwVgMiFXZqeprwXwIhmziyhbSR0Ri1WiKFUA==",
+            "version": "0.0.2-develop.17",
+            "resolved": "https://registry.npmjs.org/@lumeweb/kernel-rpc-client/-/kernel-rpc-client-0.0.2-develop.17.tgz",
+            "integrity": "sha512-FRv0zaor8KQHozje9KXyJ4qHEOkY7jHg9T5WDJgyL4fFx2P2C13PLTSMwi+2eGwEz7VropGGSSaakycdQ2II+A==",
             "dependencies": {
                 "@lumeweb/interface-relay": "^0.0.2-develop.3",
-                "@lumeweb/libkernel": "^0.1.0-develop.38",
-                "@lumeweb/rpc-client": "^0.0.2-develop.4"
+                "@lumeweb/libkernel": "^0.1.0-develop.44",
+                "@lumeweb/rpc-client": "^0.0.2-develop.6"
             }
         },
         "node_modules/@lumeweb/kernel-rpc-client/node_modules/@lumeweb/interface-relay": {
@@ -3291,21 +3291,21 @@
             }
         },
         "node_modules/@lumeweb/rpc": {
-            "version": "0.0.2-develop.2",
-            "resolved": "https://registry.npmjs.org/@lumeweb/rpc/-/rpc-0.0.2-develop.2.tgz",
-            "integrity": "sha512-3+TEXxk1vHI90MgBEY4dJY8OErcKuqQ0GYRjjb4akOSA89LkL7k1uwHOXNusWk4T6NAx1nfm/6jiB9+FKmI+zw==",
+            "version": "0.0.2-develop.5",
+            "resolved": "https://registry.npmjs.org/@lumeweb/rpc/-/rpc-0.0.2-develop.5.tgz",
+            "integrity": "sha512-7EZxxVNIqwHf8yznoWdnuaYPZ97vJbDpS97GYFViPh6OumgknrpZn2Dw008l9O5zSvx9y5ZRW19bHANvmTuoKg==",
             "dependencies": {
                 "compact-encoding": "2.12.0",
-                "protomux-rpc": "1.4.0"
+                "protomux-rpc": "1.4.1"
             }
         },
         "node_modules/@lumeweb/rpc-client": {
-            "version": "0.0.2-develop.4",
-            "resolved": "https://registry.npmjs.org/@lumeweb/rpc-client/-/rpc-client-0.0.2-develop.4.tgz",
-            "integrity": "sha512-89QKOAIPsFIw4V7gvf2PaZMrfMVDiP7Nbrme8U68rWRkXuG+AI74/4Km4oBAA2wDSmMcTXLp+4iawYhLapp1PQ==",
+            "version": "0.0.2-develop.6",
+            "resolved": "https://registry.npmjs.org/@lumeweb/rpc-client/-/rpc-client-0.0.2-develop.6.tgz",
+            "integrity": "sha512-9PjeWNKaig8GzPa58qd93X0/H2KiwZatU/uRn5H1VkdyoZF4z3K4uoJ8qDl/WU1NViQ5iwB0DgV/8YQMdQDb0g==",
             "dependencies": {
                 "@lumeweb/interface-relay": "0.0.2-develop.1",
-                "@lumeweb/rpc": "0.0.2-develop.2",
+                "@lumeweb/rpc": "0.0.2-develop.5",
                 "b4a": "^1.6.4",
                 "binconv": "^0.2.0",
                 "hypercore-crypto": "^3.3.1",
@@ -10839,9 +10839,9 @@
             }
         },
         "node_modules/hypercore-crypto": {
-            "version": "3.3.1",
-            "resolved": "https://registry.npmjs.org/hypercore-crypto/-/hypercore-crypto-3.3.1.tgz",
-            "integrity": "sha512-Fo0ZBMDW3P7HFh58AQdxsVop0Xh0Bper4Pyl5Dpc+tvGos6je2ufJpeepaHaI0mNkKq4we1ikd47kTnx2XJd/w==",
+            "version": "3.4.0",
+            "resolved": "https://registry.npmjs.org/hypercore-crypto/-/hypercore-crypto-3.4.0.tgz",
+            "integrity": "sha512-0cZA1B58p1J84TDbTh8DMMIj7Qr7Rzz8NyGIo+ykUhdwD21gtjiiLWoME92QvN+lgbfu0Zfr9vwxT8sRmyg+AA==",
             "dependencies": {
                 "b4a": "^1.1.0",
                 "compact-encoding": "^2.5.1",
@@ -13036,9 +13036,9 @@
             "peer": true
         },
         "node_modules/json-stringify-deterministic": {
-            "version": "1.0.8",
-            "resolved": "https://registry.npmjs.org/json-stringify-deterministic/-/json-stringify-deterministic-1.0.8.tgz",
-            "integrity": "sha512-rkJID3qeigo3VCrEcxX1333fTBBxW89YrdYcZexMnL/WdB8u0zctyG63e/DpahRJyrWCDhh7IQhiR7u2XEDQ4Q==",
+            "version": "1.0.10",
+            "resolved": "https://registry.npmjs.org/json-stringify-deterministic/-/json-stringify-deterministic-1.0.10.tgz",
+            "integrity": "sha512-hBLYMyCnoYh0rQ2ZyEegbLaFAS5KqOZ6HZ5fgq6lGWhtNRKw2JUp/hkfjQS1bjYZlHW9AjvXBWCJe9OwcugRNw==",
             "engines": {
                 "node": ">= 4"
             }
@@ -19673,9 +19673,9 @@
             "integrity": "sha512-vtK/94akxsTMhe0/cbfpR+syPuszcuwhqVjJq26CuNDgFGj682oRBXOP5MJpv2r7JtE8MsiepGIqvvOTBwn2vA=="
         },
         "node_modules/protomux": {
-            "version": "3.5.0",
-            "resolved": "https://registry.npmjs.org/protomux/-/protomux-3.5.0.tgz",
-            "integrity": "sha512-IXxAhzRyvHU5blOILNzFg0AdiQ/R6adQ094RDWUFNOg82mp8ZwsvOkLICcl4sTnRqHUTh3B4tBsur06kGfhG8A==",
+            "version": "3.5.1",
+            "resolved": "https://registry.npmjs.org/protomux/-/protomux-3.5.1.tgz",
+            "integrity": "sha512-+ioDo9Cu5rTNQH9Or2UkXJRFPAZMzqr4gZFuyib8tTmy8YyZDCL2poP8dhc5JgJydTrj94jn1Dsp/C0ESpEtjQ==",
             "dependencies": {
                 "b4a": "^1.3.1",
                 "compact-encoding": "^2.5.1",
@@ -19684,9 +19684,9 @@
             }
         },
         "node_modules/protomux-rpc": {
-            "version": "1.4.0",
-            "resolved": "https://registry.npmjs.org/protomux-rpc/-/protomux-rpc-1.4.0.tgz",
-            "integrity": "sha512-X1JpCksH0yUh8DxoAOCxP4nX5aJeQPiPe3IybdRKc9OXSw/mtn8qdNBm4EgsgqfoL1V4LE5rUgi2vjIFpP/2Cg==",
+            "version": "1.4.1",
+            "resolved": "https://registry.npmjs.org/protomux-rpc/-/protomux-rpc-1.4.1.tgz",
+            "integrity": "sha512-J0WuK5uxyj1sKpGaM5dYvZGa3JRHDLpZI0qgENto8OXXDSPNGvcTQVuyKUFlFoxHYVm20RIsUhiWYZwzfuBMKA==",
             "dependencies": {
                 "bits-to-bytes": "^1.0.0",
                 "compact-encoding": "^2.6.1",
