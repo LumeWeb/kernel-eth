@@ -11,7 +11,7 @@
             "license": "MIT",
             "dependencies": {
                 "@lumeweb/bigint-crypto-utils": "^1.0.0",
-                "@lumeweb/kernel-network-registry-client": "^0.1.0-develop.7",
+                "@lumeweb/kernel-network-registry-client": "^0.1.0-develop.9",
                 "@lumeweb/kernel-rpc-client": "0.0.2-develop.17",
                 "@lumeweb/libethsync": "0.1.0-develop.49",
                 "@lumeweb/libkernel": "0.1.0-develop.44",
@@ -3098,9 +3098,9 @@
             }
         },
         "node_modules/@lumeweb/kernel-network-registry-client": {
-            "version": "0.1.0-develop.7",
-            "resolved": "https://registry.npmjs.org/@lumeweb/kernel-network-registry-client/-/kernel-network-registry-client-0.1.0-develop.7.tgz",
-            "integrity": "sha512-bpTBFrsoPQt59waey6MR1FnwVxht+bMIPT65sK7TgEGGKvp1pX66MtnbglVEoGjWCOr3TtkROtv04Nk5Hxly4Q==",
+            "version": "0.1.0-develop.9",
+            "resolved": "https://registry.npmjs.org/@lumeweb/kernel-network-registry-client/-/kernel-network-registry-client-0.1.0-develop.9.tgz",
+            "integrity": "sha512-JeJD8hHXXKOAmif7DKTy3f3M6TsHuvn7LnWIlxocz7uPjMRf9T1dTuKu4NQdBssYY1caTxOiCbhTfXCaUhzEaQ==",
             "dependencies": {
                 "@lumeweb/libkernel": "^0.1.0-develop.39"
             }
