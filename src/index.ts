@@ -17,6 +17,7 @@ import {
 } from "@lumeweb/libethsync/client";
 import * as capella from "@lodestar/types/capella";
 import defer from "p-defer";
+import { Level } from "level";
 
 onmessage = handleMessage;
 
@@ -28,6 +29,9 @@ const clientInitDefer = defer();
 
 let client: EthClient;
 let rpc: RpcNetwork;
+const db = new Level<number | string, Uint8Array>("consensus", {
+  valueEncoding: "buffer",
+});
 
 addHandler("presentKey", handlePresentKey);
 addHandler("register", handleRegister);
@@ -131,6 +135,7 @@ async function executionHandler(data: Map<string, string | any>) {
 
 async function setup() {
   rpc = createRpcClient();
+  await db.open();
   await rpc.ready;
 
   client = createEthClient(
@@ -155,13 +160,39 @@ async function setup() {
     500,
   );
 
+  let lastUpdate = 0;
+
+  client.store.on("set", async (period: number, update: Uint8Array) => {
+    if (period < lastUpdate) {
+      return;
+    }
+    await db.put("latest", update);
+    lastUpdate = period;
+  });
+
   clientInitDefer.resolve();
 
   let synced = false;
 
   while (!synced) {
     try {
-      await client.sync();
+      let consensus;
+      try {
+        consensus = await db.get("latest");
+      } catch {}
+
+      if (consensus) {
+        try {
+          await client.syncFromCheckpoint(
+            capella.ssz.LightClientUpdate.deserialize(consensus),
+          );
+        } catch {
+          await client.sync();
+        }
+      } else {
+        await client.sync();
+      }
+
       synced = true;
     } catch (e) {
       logErr(e.message);
