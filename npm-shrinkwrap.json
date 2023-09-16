@@ -13,8 +13,9 @@
                 "@lumeweb/bigint-crypto-utils": "^1.0.0",
                 "@lumeweb/kernel-network-registry-client": "^0.1.0-develop.9",
                 "@lumeweb/kernel-rpc-client": "0.0.2-develop.17",
-                "@lumeweb/libethsync": "0.1.0-develop.49",
+                "@lumeweb/libethsync": "0.1.0-develop.58",
                 "@lumeweb/libkernel": "0.1.0-develop.44",
+                "level": "^8.0.0",
                 "p-defer": "^4.0.0"
             },
             "devDependencies": {
@@ -3124,9 +3125,9 @@
             }
         },
         "node_modules/@lumeweb/libethsync": {
-            "version": "0.1.0-develop.49",
-            "resolved": "https://registry.npmjs.org/@lumeweb/libethsync/-/libethsync-0.1.0-develop.49.tgz",
-            "integrity": "sha512-Vi/1TGHiUBAaR39uaix6F/oA75/1MzB6lDbQq6lYmYNhm+BowaS314v5+KgjJ3Qo2YtfiGGO+YTGZGOj7N4gZQ==",
+            "version": "0.1.0-develop.58",
+            "resolved": "https://registry.npmjs.org/@lumeweb/libethsync/-/libethsync-0.1.0-develop.58.tgz",
+            "integrity": "sha512-MdOeUdJf0jqnX/mfqWsIm/Hd3QcwQ4DC6IUokra4yIwMMoBuhdVLbdezx10xwlRorTtyRdH21tv8lYYPaydDqQ==",
             "dependencies": {
                 "@chainsafe/as-sha256": "^0.3.1",
                 "@chainsafe/bls": "7.1.1",
@@ -19125,9 +19126,9 @@
             }
         },
         "node_modules/postcss": {
-            "version": "8.4.25",
-            "resolved": "https://registry.npmjs.org/postcss/-/postcss-8.4.25.tgz",
-            "integrity": "sha512-7taJ/8t2av0Z+sQEvNzCkpDynl0tX3uJMCODi6nT3PfASC7dYCWV9aQ+uiCf+KBD4SEFcu+GvJdGdwzQ6OSjCw==",
+            "version": "8.4.29",
+            "resolved": "https://registry.npmjs.org/postcss/-/postcss-8.4.29.tgz",
+            "integrity": "sha512-cbI+jaqIeu/VGqXEarWkRCCffhjgXc0qjBtXpqJhTBohMUjUQnbBr0xqX3vEKudc4iviTewcJo5ajcec5+wdJw==",
             "dev": true,
             "funding": [
                 {
@@ -20462,9 +20463,9 @@
             }
         },
         "node_modules/rollup": {
-            "version": "3.26.2",
-            "resolved": "https://registry.npmjs.org/rollup/-/rollup-3.26.2.tgz",
-            "integrity": "sha512-6umBIGVz93er97pMgQO08LuH3m6PUb3jlDUUGFsNJB6VgTCUaDFpupf5JfU30529m/UKOgmiX+uY6Sx8cOYpLA==",
+            "version": "3.29.2",
+            "resolved": "https://registry.npmjs.org/rollup/-/rollup-3.29.2.tgz",
+            "integrity": "sha512-CJouHoZ27v6siztc21eEQGo0kIcE5D1gVPA571ez0mMYb25LGYGKnVNXpEj5MGlepmDWGXNjDB5q7uNiPHC11A==",
             "dev": true,
             "bin": {
                 "rollup": "dist/bin/rollup"
@@ -23455,14 +23456,14 @@
             }
         },
         "node_modules/vite": {
-            "version": "4.4.2",
-            "resolved": "https://registry.npmjs.org/vite/-/vite-4.4.2.tgz",
-            "integrity": "sha512-zUcsJN+UvdSyHhYa277UHhiJ3iq4hUBwHavOpsNUGsTgjBeoBlK8eDt+iT09pBq0h9/knhG/SPrZiM7cGmg7NA==",
+            "version": "4.4.9",
+            "resolved": "https://registry.npmjs.org/vite/-/vite-4.4.9.tgz",
+            "integrity": "sha512-2mbUn2LlUmNASWwSCNSJ/EG2HuSRTnVNaydp6vMCm5VIqJsjMfbIWtbH2kDuwUVW5mMUKKZvGPX/rqeqVvv1XA==",
             "dev": true,
             "dependencies": {
                 "esbuild": "^0.18.10",
-                "postcss": "^8.4.24",
-                "rollup": "^3.25.2"
+                "postcss": "^8.4.27",
+                "rollup": "^3.27.1"
             },
             "bin": {
                 "vite": "bin/vite.js"
