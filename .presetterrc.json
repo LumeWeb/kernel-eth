@@ -3,6 +3,11 @@
         "@lumeweb/presetter-kernel-module-preset"
     ],
     "config": {
+        "tsconfig": {
+            "compilerOptions": {
+                "module": "nodenext"
+            }
+        },
         "vite": {
             "resolve": {
                 "alias": {
