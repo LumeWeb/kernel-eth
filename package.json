@@ -1,10 +1,9 @@
 {
     "name": "@lumeweb/kernel-eth",
-    "version": "0.1.0",
+    "version": "0.1.0-develop.1",
     "license": "MIT",
     "type": "module",
     "readme": "ERROR: No README data found!",
-    "_id": "@lumeweb/kernel-eth@0.1.0",
     "repository": {
         "type": "git",
         "url": "gitea@git.lumeweb.com:LumeWeb/kernel-eth.git"
