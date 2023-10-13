@@ -12,7 +12,7 @@
             "dependencies": {
                 "@lumeweb/bigint-crypto-utils": "1.0.0",
                 "@lumeweb/kernel-network-registry-client": "^0.1.0-develop.10",
-                "@lumeweb/kernel-rpc-client": "0.0.2-develop.17",
+                "@lumeweb/kernel-rpc-client": "0.0.2-develop.18",
                 "@lumeweb/libethsync": "0.1.0-develop.61",
                 "@lumeweb/libkernel": "0.1.0-develop.66",
                 "level": "^8.0.0",
@@ -3110,12 +3110,12 @@
             }
         },
         "node_modules/@lumeweb/kernel-rpc-client": {
-            "version": "0.0.2-develop.17",
-            "resolved": "https://registry.npmjs.org/@lumeweb/kernel-rpc-client/-/kernel-rpc-client-0.0.2-develop.17.tgz",
-            "integrity": "sha512-FRv0zaor8KQHozje9KXyJ4qHEOkY7jHg9T5WDJgyL4fFx2P2C13PLTSMwi+2eGwEz7VropGGSSaakycdQ2II+A==",
+            "version": "0.0.2-develop.18",
+            "resolved": "https://registry.npmjs.org/@lumeweb/kernel-rpc-client/-/kernel-rpc-client-0.0.2-develop.18.tgz",
+            "integrity": "sha512-8TE8Q0aBYL9J9xb3rbrC7GCS4uzhMcto9TMH8/9ujDhp4LNP8BbMC0nghTYMSE9EzIxmWMwJokkvudQs08MfGQ==",
             "dependencies": {
                 "@lumeweb/interface-relay": "^0.0.2-develop.3",
-                "@lumeweb/libkernel": "^0.1.0-develop.44",
+                "@lumeweb/libkernel": "^0.1.0-develop.66",
                 "@lumeweb/rpc-client": "^0.0.2-develop.6"
             }
         },
@@ -22967,7 +22967,8 @@
         "node_modules/text-table": {
             "version": "0.2.0",
             "resolved": "https://registry.npmjs.org/text-table/-/text-table-0.2.0.tgz",
-            "integrity": "sha512-N+8UisAXDGk8PFXP4HAzVR9nbfmVJ3zYLAWiTIoqC5v5isinhr+r5uaO8+7r3BMfuNIufIsA7RdpVgacC2cSpw=="
+            "integrity": "sha512-N+8UisAXDGk8PFXP4HAzVR9nbfmVJ3zYLAWiTIoqC5v5isinhr+r5uaO8+7r3BMfuNIufIsA7RdpVgacC2cSpw==",
+            "peer": true
         },
         "node_modules/through": {
             "version": "2.3.8",
@@ -24365,6 +24366,7 @@
             "version": "4.0.2",
             "resolved": "https://registry.npmjs.org/write-file-atomic/-/write-file-atomic-4.0.2.tgz",
             "integrity": "sha512-7KxauUdBmSdWnmpaGFg+ppNjKF8uNLry8LyzjauQDOVONfFLNKrKvQOxZ/VuTIcS/gge/YNahf5RIIQWTSarlg==",
+            "peer": true,
             "dependencies": {
                 "imurmurhash": "^0.1.4",
                 "signal-exit": "^3.0.7"
