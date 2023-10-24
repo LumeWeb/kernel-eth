@@ -11,9 +11,10 @@
             "license": "MIT",
             "dependencies": {
                 "@lumeweb/bigint-crypto-utils": "1.0.0",
+                "@lumeweb/kernel-lavanet-client": "^0.1.0-develop.6",
                 "@lumeweb/kernel-network-registry-client": "^0.1.0-develop.10",
                 "@lumeweb/kernel-rpc-client": "0.0.2-develop.18",
-                "@lumeweb/libethsync": "0.1.0-develop.61",
+                "@lumeweb/libethsync": "0.1.0-develop.62",
                 "@lumeweb/libkernel": "0.1.0-develop.66",
                 "level": "^8.0.0",
                 "p-defer": "^4.0.0"
@@ -3101,6 +3102,72 @@
                 "@lumeweb/relay-cfg": "0.1.9"
             }
         },
+        "node_modules/@lumeweb/kernel-lavanet-client": {
+            "version": "0.1.0-develop.6",
+            "resolved": "https://registry.npmjs.org/@lumeweb/kernel-lavanet-client/-/kernel-lavanet-client-0.1.0-develop.6.tgz",
+            "integrity": "sha512-uM8mqiRPQYDaHtNrZXs1/jg9gl3hZj2cA/DMb+FwBMxkuEG87EV3ZNlpGhCKY7WGBwP0LYyXP3Aj7GSLVCb03w==",
+            "dependencies": {
+                "@lumeweb/libkernel": "^0.1.0-develop.67"
+            }
+        },
+        "node_modules/@lumeweb/kernel-lavanet-client/node_modules/@lumeweb/libkernel": {
+            "version": "0.1.0-develop.67",
+            "resolved": "https://registry.npmjs.org/@lumeweb/libkernel/-/libkernel-0.1.0-develop.67.tgz",
+            "integrity": "sha512-1GPaMO20agALnxjkqkswaXW+s6CpdqsvwgrdOgC4WkGdY4P4z3mD08FEqkvaVnVQpcJdUqPlLurQddCP+m0Y7g==",
+            "dependencies": {
+                "@lumeweb/libweb": "0.2.0-develop.60",
+                "emittery": "^1.0.1",
+                "p-defer": "^4.0.0"
+            }
+        },
+        "node_modules/@lumeweb/kernel-lavanet-client/node_modules/@lumeweb/libportal": {
+            "version": "0.2.0-develop.40",
+            "resolved": "https://registry.npmjs.org/@lumeweb/libportal/-/libportal-0.2.0-develop.40.tgz",
+            "integrity": "sha512-vtdYK92JFUGR1VxQxwghcb5eTLXx8J4wlnCWNpfbNlSEkABJPzM+V5BAhfIqO1d3M55FUBLpIb+h4nibxflcRA==",
+            "dependencies": {
+                "@lumeweb/libs5": "^0.1.0-develop.60",
+                "@noble/curves": "^1.1.0",
+                "@noble/hashes": "^1.3.1",
+                "detect-node": "^2.1.0",
+                "multiformats": "^11.0.2",
+                "node-fetch": "^3.3.1",
+                "p-defer": "^4.0.0",
+                "stream-to-blob": "^2.0.1",
+                "tus-js-client": "^3.1.0",
+                "web-streams-polyfill": "^3.2.1"
+            }
+        },
+        "node_modules/@lumeweb/kernel-lavanet-client/node_modules/@lumeweb/libweb": {
+            "version": "0.2.0-develop.60",
+            "resolved": "https://registry.npmjs.org/@lumeweb/libweb/-/libweb-0.2.0-develop.60.tgz",
+            "integrity": "sha512-GNgc+OwRp/Lz8fnQ5r5aWJchdWDoClXS1T+Vg3i3KZ73RMcbBvOG2dwliLW6RWl6spFjw+BunwexQxLz6BzqjA==",
+            "dependencies": {
+                "@lumeweb/community-portals": "^0.1.0-develop.6",
+                "@lumeweb/libportal": "0.2.0-develop.40",
+                "@lumeweb/node-library-preset": "0.2.7",
+                "@noble/ciphers": "^0.3.0",
+                "@noble/curves": "^1.1.0",
+                "@noble/hashes": "^1.3.1",
+                "binconv": "^0.2.0"
+            }
+        },
+        "node_modules/@lumeweb/kernel-lavanet-client/node_modules/node-fetch": {
+            "version": "3.3.2",
+            "resolved": "https://registry.npmjs.org/node-fetch/-/node-fetch-3.3.2.tgz",
+            "integrity": "sha512-dRB78srN/l6gqWulah9SrxeYnxeddIG30+GOqK/9OlLVyLg3HPnr6SqOWTWOXKRwC2eGYCkZ59NNuSgvSrpgOA==",
+            "dependencies": {
+                "data-uri-to-buffer": "^4.0.0",
+                "fetch-blob": "^3.1.4",
+                "formdata-polyfill": "^4.0.10"
+            },
+            "engines": {
+                "node": "^12.20.0 || ^14.13.1 || >=16.0.0"
+            },
+            "funding": {
+                "type": "opencollective",
+                "url": "https://opencollective.com/node-fetch"
+            }
+        },
         "node_modules/@lumeweb/kernel-network-registry-client": {
             "version": "0.1.0-develop.10",
             "resolved": "https://registry.npmjs.org/@lumeweb/kernel-network-registry-client/-/kernel-network-registry-client-0.1.0-develop.10.tgz",
@@ -3120,9 +3187,9 @@
             }
         },
         "node_modules/@lumeweb/libethsync": {
-            "version": "0.1.0-develop.61",
-            "resolved": "https://registry.npmjs.org/@lumeweb/libethsync/-/libethsync-0.1.0-develop.61.tgz",
-            "integrity": "sha512-nbRqyam3spbTvrER/Dk6V6UY4gsh4rsyJ21HaIi0QAEXdFYhi8HAuofNwfpXiOBIUkLNVRaUCXayPVqC/2xM4Q==",
+            "version": "0.1.0-develop.62",
+            "resolved": "https://registry.npmjs.org/@lumeweb/libethsync/-/libethsync-0.1.0-develop.62.tgz",
+            "integrity": "sha512-QGlBuk162ltIWxbVGkggPIImOl3PogxpSuDuhSkuLLzo2S9rsoZqtnuXvNq9DKsb8RxXQukfqcYu+OPDzedW2g==",
             "dependencies": {
                 "@chainsafe/as-sha256": "^0.3.1",
                 "@chainsafe/bls": "7.1.1",
