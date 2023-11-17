@@ -14,7 +14,7 @@
                 "@lumeweb/kernel-lavanet-client": "^0.1.0-develop.6",
                 "@lumeweb/kernel-network-registry-client": "^0.1.0-develop.10",
                 "@lumeweb/kernel-rpc-client": "0.0.2-develop.18",
-                "@lumeweb/libethsync": "0.1.0-develop.62",
+                "@lumeweb/libethsync": "0.1.0-develop.63",
                 "@lumeweb/libkernel": "0.1.0-develop.66",
                 "level": "^8.0.0",
                 "p-defer": "^4.0.0"
@@ -3187,9 +3187,9 @@
             }
         },
         "node_modules/@lumeweb/libethsync": {
-            "version": "0.1.0-develop.62",
-            "resolved": "https://registry.npmjs.org/@lumeweb/libethsync/-/libethsync-0.1.0-develop.62.tgz",
-            "integrity": "sha512-QGlBuk162ltIWxbVGkggPIImOl3PogxpSuDuhSkuLLzo2S9rsoZqtnuXvNq9DKsb8RxXQukfqcYu+OPDzedW2g==",
+            "version": "0.1.0-develop.63",
+            "resolved": "https://registry.npmjs.org/@lumeweb/libethsync/-/libethsync-0.1.0-develop.63.tgz",
+            "integrity": "sha512-mQWFRekVkj7Bc2j5vuZzcYuOAT6M5ybYJjcuZqHFpdDOvVkUX+KY86xpcKFbIytROS4cFl/YYkBc84b/fAdMhA==",
             "dependencies": {
                 "@chainsafe/as-sha256": "^0.3.1",
                 "@chainsafe/bls": "7.1.1",
