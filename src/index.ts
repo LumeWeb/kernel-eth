@@ -18,6 +18,10 @@ import {
 import * as capella from "@lodestar/types/capella";
 import defer from "p-defer";
 import { Level } from "level";
+import {
+  type LavaNetClient,
+  createClient as createLavanetClient,
+} from "@lumeweb/kernel-lavanet-client";
 
 onmessage = handleMessage;
 
@@ -28,6 +32,7 @@ const moduleReadyDefer = defer();
 const clientInitDefer = defer();
 
 let client: EthClient;
+let lavanet: LavaNetClient;
 let rpc: RpcNetwork;
 const db = new Level<number | string, Uint8Array>("consensus", {
   valueEncoding: "buffer",
@@ -112,29 +117,12 @@ async function consensusHandler(method: string, data: any) {
 
 async function executionHandler(data: Map<string, string | any>) {
   await rpc.ready;
-  while (true) {
-    let query = await rpc.simpleQuery({
-      query: {
-        module: "eth",
-        method: "execution_request",
-        data,
-      },
-      options: {
-        relayTimeout: 30,
-        queryTimeout: 30,
-      },
-    });
-
-    let ret = await query.result;
-
-    if (ret.data) {
-      return ret.data;
-    }
-  }
+  return await lavanet.query("ETH1", data);
 }
 
 async function setup() {
   rpc = createRpcClient();
+  lavanet = createLavanetClient();
   await db.open();
   await rpc.ready;
 
